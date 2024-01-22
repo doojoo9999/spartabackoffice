@@ -1,7 +1,7 @@
 package com.teamsparta.spartabackoffice.domain.comment.repository
 
-import com.teamsparta.spartabackoffice.domain.comment.model.Comment
+import com.teamsparta.spartabackoffice.domain.comment.model.CommentEntity
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface CommentRepository: JpaRepository<Comment, Long> {
+interface CommentRepository: JpaRepository<CommentEntity, Long> {
 }

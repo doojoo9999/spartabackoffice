@@ -1,8 +1,8 @@
 package com.teamsparta.spartabackoffice.domain.comment.controller
 
-import com.teamsparta.spartabackoffice.domain.comment.dto.CommentResponse
-import com.teamsparta.spartabackoffice.domain.comment.dto.CreateCommentRequest
-import com.teamsparta.spartabackoffice.domain.comment.dto.UpdateCommentRequest
+import com.teamsparta.spartabackoffice.domain.comment.dto.reponse.CommentResponse
+import com.teamsparta.spartabackoffice.domain.comment.dto.request.CreateCommentRequest
+import com.teamsparta.spartabackoffice.domain.comment.dto.request.UpdateCommentRequest
 import com.teamsparta.spartabackoffice.domain.comment.service.CommentService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -24,10 +24,9 @@ class CommentController(
 ) {
 
     //댓글 작성
-    @PreAuthorize("hasAuthority('USER')")
     @PostMapping
     fun createComment(
-        @RequestParam postId,
+        @RequestParam postId: Long,
         @RequestBody createCommentRequest: CreateCommentRequest,
         principal: Principal
     ): ResponseEntity<CommentResponse>{
@@ -39,7 +38,6 @@ class CommentController(
     }
 
     //댓글 수정
-    @PreAuthorize("hasAuthority('USER')")
     @PutMapping("/{commentId}")
     fun updateComment(@PathVariable commentId: Long,
                       @RequestBody updateCommentRequest: UpdateCommentRequest
@@ -53,14 +51,13 @@ class CommentController(
     }
 
     //댓글 삭제
-    @PreAuthorize("hasAuthority('USER')")
     @DeleteMapping("/{commentId}")
 
     fun deleteComment(@PathVariable commentId: Long
     ): ResponseEntity<String>{
-       val deleteComment = commentService.deleteComment(commentId)
+       commentService.deleteComment(commentId)
 
-        return  ResponseEntity.status(HttpStatus.OK).body(deleteComment)
+        return  ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 
 }
