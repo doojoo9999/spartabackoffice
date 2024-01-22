@@ -1,11 +1,11 @@
-package com.teamsparta.spartabackoffice.domain.member.model
+package com.teamsparta.spartabackoffice.domain.user.model
 
-import com.teamsparta.spartabackoffice.domain.member.dto.response.MemberResponse
+import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
 import jakarta.persistence.*
 
 @Entity
 @Table(name = "users")
-class MemberEntity(
+class UserEntity(
     @Column(name = "email", nullable = false)
     var email: String,
 
@@ -15,16 +15,18 @@ class MemberEntity(
     @Column(name = "name", nullable = false)
     var name: String,
 
-    @Column(name = "role", nullable = false)
-    var role: String
+
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0
+    var id: Long? = null
+    //var id: Long = 0
+    @Column(name = "role", nullable = false)
+    var role: String = "USER"
 }
 
-fun MemberEntity.toResponse() : MemberResponse {
-    return MemberResponse(
+fun UserEntity.toResponse() : UserResponse {
+    return UserResponse(
         id = id,
         email = email,
         name = name,

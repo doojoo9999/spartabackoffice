@@ -1,4 +1,4 @@
-package com.teamsparta.gogocard.infra.security
+package com.teamsparta.spartabackoffice.infra.security
 
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority

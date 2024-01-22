@@ -1,6 +1,6 @@
-package com.teamsparta.gogocard.infra.security.jwt
+package com.teamsparta.spartabackoffice.infra.security.jwt
 
-import com.teamsparta.gogocard.infra.security.UserPrincipal
+import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.web.authentication.WebAuthenticationDetails
 
