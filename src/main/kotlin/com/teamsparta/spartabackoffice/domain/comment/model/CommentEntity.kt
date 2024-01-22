@@ -25,7 +25,7 @@ class CommentEntity(
 fun CommentEntity.toResponse() : CommentResponse {
     return CommentResponse(
         userId = /*user.*/id,
-        postId = id,
+        postId = post.id,
         content = content
     )
 }
