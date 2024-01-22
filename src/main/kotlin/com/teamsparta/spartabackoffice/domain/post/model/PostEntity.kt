@@ -7,6 +7,10 @@ import org.springframework.data.annotation.Id
 @Entity
 @Table (name = "posts")
 class PostEntity (
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    var id: Long = 0,
+
     @Column (name = "title", nullable = false )
     var title: String,
 
@@ -18,7 +22,10 @@ class PostEntity (
 
     @Column (name = "complete", nullable = false)
     @Enumerated(EnumType.STRING)
-    var complete : Complete
+    var complete : Complete,
+
+    @Column(name = "parentpostid", nullable = true)
+    var parentPostId: Long? = null
 
 //    TODO("UserEntity 추가 후 수정 필요")
 //    @JoinColumn (name = "userId")
@@ -26,10 +33,6 @@ class PostEntity (
 //    var user : UserEntity
 
 ){
-
-    @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    var id: Long = 0
 
 }
 
@@ -40,6 +43,7 @@ fun PostEntity.toResponse() : PostResponse {
         title = title,
         content = content,
         private = private,
-        complete = complete
+        complete = complete,
+        parentCommentId = null
     )
 }
