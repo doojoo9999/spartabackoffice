@@ -6,22 +6,24 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "users")
 class UserEntity(
-    @Column(name = "email", nullable = false)
-    var email: String,
-
-    @Column(name = "password", nullable = false)
-    var password: String,
-
-    @Column(name = "name", nullable = false)
-    var name: String,
-
-
+    email: String,
+    password: String,
+    name: String
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
-    //var id: Long = 0
-    @Column(name = "role", nullable = false)
+    var id: Long = 0
+    //var id: Long? = null
+    @Column(nullable = false)
+    var email = email
+
+    @Column(nullable = false)
+    var password = password
+
+    @Column(nullable = false)
+    var name = name
+
+    @Column(nullable = false)
     var role: String = "USER"
 }
 

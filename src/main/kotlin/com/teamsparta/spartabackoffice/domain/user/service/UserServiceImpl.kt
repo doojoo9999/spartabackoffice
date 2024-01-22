@@ -34,8 +34,8 @@ class UserServiceImpl(
         if (!passwordEncoder.matches(request.password, user.password)) {
             throw IllegalArgumentException("이메일 또는 비밀번호가 다릅니다.")
         }
-        val token = jwtPlugin.generateAccessToken(user.id?.toString() ?: "unknown", user.email, user.role)
-        //val token = jwtPlugin.generateAccessToken(user.id.toString(), user.email, user.role)
+        //val token = jwtPlugin.generateAccessToken(user.id.toString() ?: "unknown", user.email, user.role)
+        val token = jwtPlugin.generateAccessToken(user.id.toString(), user.email, user.role)
         return Pair(user.toResponse(), token)
     }
 }
