@@ -7,7 +7,7 @@ import com.teamsparta.spartabackoffice.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.spartabackoffice.domain.post.dto.response.PostResponse
 import org.springframework.stereotype.Service
 
-@Service
+
 interface PostService {
 
     fun getPostList () : List<PostResponse>

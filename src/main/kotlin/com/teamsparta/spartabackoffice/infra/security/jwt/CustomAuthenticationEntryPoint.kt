@@ -1,4 +1,4 @@
-package com.teamsparta.gogocard.infra.security.jwt
+package com.teamsparta.spartabackoffice.infra.security.jwt
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.teamsparta.spartabackoffice.domain.exception.dto.ErrorResponse

@@ -1,7 +1,7 @@
 package com.teamsparta.spartabackoffice.infra.security
 
-import com.teamsparta.gogocard.infra.security.jwt.CustomAccessDeniedHandler
-import com.teamsparta.gogocard.infra.security.jwt.JwtAuthenticationFilter
+import com.teamsparta.spartabackoffice.infra.security.jwt.CustomAccessDeniedHandler
+import com.teamsparta.spartabackoffice.infra.security.jwt.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
@@ -29,8 +29,6 @@ class SecurityConfig(
             .authorizeHttpRequests {
                 it.requestMatchers (
 //                    TODO("수정 필요")
-//                    "/api/users/signin",
-//                    "/api/users/signup",
                     "/swagger-ui/**",
                     "/v3/api-docs/**",
                 ).permitAll()

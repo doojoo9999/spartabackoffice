@@ -11,7 +11,9 @@ import com.teamsparta.spartabackoffice.domain.post.model.PostEntity
 import com.teamsparta.spartabackoffice.domain.post.model.toResponse
 import com.teamsparta.spartabackoffice.domain.post.repository.PostRepository
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Service
 
+@Service
 class PostServiceImpl (
     val postRepository: PostRepository
 )

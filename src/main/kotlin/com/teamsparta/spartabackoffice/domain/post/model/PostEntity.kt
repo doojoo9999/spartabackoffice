@@ -7,9 +7,7 @@ import org.springframework.data.annotation.Id
 @Entity
 @Table (name = "posts")
 class PostEntity (
-    @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    var id: Long = 0,
+
 
     @Column (name = "title", nullable = false )
     var title: String,
@@ -33,7 +31,9 @@ class PostEntity (
 //    var user : UserEntity
 
 ){
-
+    @jakarta.persistence.Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    var id: Long = 0
 }
 
 fun PostEntity.toResponse() : PostResponse {
