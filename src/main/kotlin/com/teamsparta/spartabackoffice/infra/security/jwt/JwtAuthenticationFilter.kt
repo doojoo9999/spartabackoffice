@@ -1,6 +1,5 @@
 package com.teamsparta.spartabackoffice.infra.security.jwt
 
-
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
