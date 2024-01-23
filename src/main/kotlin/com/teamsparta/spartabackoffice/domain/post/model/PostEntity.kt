@@ -22,9 +22,6 @@ class PostEntity (
     @Enumerated(EnumType.STRING)
     var complete : Complete,
 
-    @Column(name = "parentpostid", nullable = true)
-    var parentPostId: Long? = null
-
 //    TODO("UserEntity 추가 후 수정 필요")
 //    @JoinColumn (name = "userId")
 //    @ManyToOne
@@ -38,12 +35,10 @@ class PostEntity (
 
 fun PostEntity.toResponse() : PostResponse {
     return PostResponse(
-        userId = /*user.*/id,
         postId = id,
         title = title,
         content = content,
         private = private,
-        complete = complete,
-        parentCommentId = null
+        complete = complete
     )
 }

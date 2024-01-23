@@ -84,7 +84,6 @@ class PostServiceImpl (
                     content = request.content,
                     private = request.private,
                     complete = Complete.ING,
-                    parentPostId = parentPostId
                 )
             ).toResponse()
         }
