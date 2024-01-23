@@ -1,7 +1,6 @@
 package com.teamsparta.spartabackoffice.domain.comment.model
 
 import com.teamsparta.spartabackoffice.domain.comment.dto.reponse.CommentResponse
-import com.teamsparta.spartabackoffice.domain.post.dto.response.PostResponse
 import com.teamsparta.spartabackoffice.domain.post.model.PostEntity
 import jakarta.persistence.*
 

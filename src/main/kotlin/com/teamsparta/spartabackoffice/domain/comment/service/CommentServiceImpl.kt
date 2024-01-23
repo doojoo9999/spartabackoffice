@@ -2,18 +2,16 @@ package com.teamsparta.spartabackoffice.domain.comment.service
 
 import com.teamsparta.spartabackoffice.domain.comment.dto.reponse.CommentResponse
 import com.teamsparta.spartabackoffice.domain.comment.dto.request.CreateCommentRequest
-
 import com.teamsparta.spartabackoffice.domain.comment.dto.request.UpdateCommentRequest
+import com.teamsparta.spartabackoffice.domain.comment.model.CommentEntity
+import com.teamsparta.spartabackoffice.domain.comment.model.toResponse
 import com.teamsparta.spartabackoffice.domain.comment.repository.CommentRepository
 import com.teamsparta.spartabackoffice.domain.exception.ModelNotFoundException
-import com.teamsparta.spartabackoffice.domain.exception.dto.UnauthorizedAccess
 import com.teamsparta.spartabackoffice.domain.post.repository.PostRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import com.teamsparta.spartabackoffice.domain.comment.model.CommentEntity
-import com.teamsparta.spartabackoffice.domain.comment.model.toResponse
 
 @Service
 class CommentServiceImpl(

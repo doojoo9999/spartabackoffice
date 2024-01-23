@@ -2,7 +2,6 @@ package com.teamsparta.spartabackoffice.domain.post.model
 
 import com.teamsparta.spartabackoffice.domain.post.dto.response.PostResponse
 import jakarta.persistence.*
-import org.springframework.data.annotation.Id
 
 @Entity
 @Table (name = "posts")

@@ -5,7 +5,6 @@ import com.teamsparta.spartabackoffice.domain.post.dto.request.CreateReplyPostRe
 import com.teamsparta.spartabackoffice.domain.post.dto.request.DeletePostRequest
 import com.teamsparta.spartabackoffice.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.spartabackoffice.domain.post.dto.response.PostResponse
-import org.springframework.stereotype.Service
 
 
 interface PostService {
