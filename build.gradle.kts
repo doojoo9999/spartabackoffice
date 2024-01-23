@@ -7,6 +7,7 @@ plugins {
     kotlin("plugin.spring") version "1.9.22"
     kotlin("plugin.noarg") version "1.9.21"
     kotlin("kapt") version "1.9.21"
+    kotlin("plugin.serialization") version "1.9.21"
 }
 
 noArg {
@@ -64,7 +65,8 @@ dependencies {
     kapt("com.querydsl:querydsl-apt:$queryDslVersion:jakarta")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-
+    implementation("io.github.jan-tennert.supabase:storage-kt:2.0.4")
+    implementation("io.ktor:ktor-client-cio:2.3.7")
 
 
 

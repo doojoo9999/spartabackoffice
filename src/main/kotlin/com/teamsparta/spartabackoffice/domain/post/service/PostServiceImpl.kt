@@ -10,20 +10,25 @@ import com.teamsparta.spartabackoffice.domain.post.model.Complete
 import com.teamsparta.spartabackoffice.domain.post.model.PostEntity
 import com.teamsparta.spartabackoffice.domain.post.model.toResponse
 import com.teamsparta.spartabackoffice.domain.post.repository.PostRepository
+import com.teamsparta.spartabackoffice.domain.user.model.UserEntity
+import com.teamsparta.spartabackoffice.domain.user.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Service
 
+@Service
 class PostServiceImpl (
-    val postRepository: PostRepository
+    val postRepository: PostRepository,
+    val userRepository: UserRepository
 )
     : PostService {
     override fun createPost(request: CreatePostRequest): PostResponse {
-        val user = postRepository.findByIdOrNull(request.userId) ?: throw IllegalStateException ("User Not Found")
+        val user = userRepository.findByIdOrNull(request.userId) ?: throw IllegalStateException ("User Not Found")
         return postRepository.save(
             PostEntity (
                 title = request.title,
                 content = request.content,
                 complete = Complete.NOT_COMPLETE,
-//                user = user,
+                user = user,
                 private = request.private,
             )
         ).toResponse()
@@ -34,12 +39,12 @@ class PostServiceImpl (
     }
 
     override fun updatePost(request: UpdatePostRequest): PostResponse {
-        val user = postRepository.findByIdOrNull(request.userId) ?: throw IllegalStateException ("User Not Found")
+        val user = userRepository.findByIdOrNull(request.userId) ?: throw IllegalStateException ("User Not Found")
         val post = postRepository.findByIdOrNull(request.postId) ?: throw IllegalStateException ("Post Not Found")
 
         val (userId, id, title, content, private) = request
 
-//        post.userId = userId
+        post.user = user
         post.id = id
         post.title = title
         post.content = content
@@ -49,42 +54,9 @@ class PostServiceImpl (
     }
 
     override fun deletePost(request: DeletePostRequest) {
-        val user = postRepository.findByIdOrNull(request.userId) ?: throw IllegalStateException ("User Not Found")
+        val user = userRepository.findByIdOrNull(request.userId) ?: throw IllegalStateException ("User Not Found")
         val post = postRepository.findByIdOrNull(request.postId) ?: throw IllegalStateException ("Post Not Found")
 
         postRepository.delete(post)
-    }
-
-    override fun createReplyPost(
-        postId : Long,
-        parentPostId: Long,
-        request: CreateReplyPostRequest): PostResponse {
-        val user = postRepository.findByIdOrNull(request.userId) ?: throw IllegalStateException("User Not Found")
-        val post = postRepository.findByIdOrNull(postId) ?: throw IllegalStateException("Post Not Found")
-
-        if (parentPostId == null) {
-            return postRepository.save(
-                PostEntity(
-//                    userId = user,
-                    title = request.title,
-                    content = request.content,
-                    private = request.private,
-                    complete = Complete.ING
-                )
-            ).toResponse()
-        } else {
-            val parentPost = postRepository.findByIdOrNull(parentPostId)
-                ?: throw ModelNotFoundException("ParentPost", parentPostId)
-
-            return postRepository.save(
-                PostEntity(
-                    title = request.title,
-                    content = request.content,
-                    private = request.private,
-                    complete = Complete.ING,
-                    parentPostId = parentPostId
-                )
-            ).toResponse()
-        }
     }
 }

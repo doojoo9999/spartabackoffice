@@ -1,15 +1,13 @@
 package com.teamsparta.spartabackoffice.domain.post.model
 
 import com.teamsparta.spartabackoffice.domain.post.dto.response.PostResponse
+import com.teamsparta.spartabackoffice.domain.user.model.UserEntity
 import jakarta.persistence.*
-import org.springframework.data.annotation.Id
 
 @Entity
 @Table (name = "posts")
 class PostEntity (
-    @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    var id: Long = 0,
+
 
     @Column (name = "title", nullable = false )
     var title: String,
@@ -24,21 +22,21 @@ class PostEntity (
     @Enumerated(EnumType.STRING)
     var complete : Complete,
 
-    @Column(name = "parentpostid", nullable = true)
-    var parentPostId: Long? = null
-
-//    TODO("UserEntity 추가 후 수정 필요")
-//    @JoinColumn (name = "userId")
-//    @ManyToOne
-//    var user : UserEntity
+    @JoinColumn (name = "userId")
+    @ManyToOne
+    var user : UserEntity
 
 ){
+
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    var id: Long = 0
 
 }
 
 fun PostEntity.toResponse() : PostResponse {
     return PostResponse(
-        userId = /*user.*/id,
+        userId = user.id,
         postId = id,
         title = title,
         content = content,

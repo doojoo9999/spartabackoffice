@@ -10,13 +10,12 @@ import org.springframework.stereotype.Service
 @Service
 interface PostService {
 
-    fun getPostList () : List<PostResponse>
+    fun getPostList(): List<PostResponse>
 
-    fun createPost (request: CreatePostRequest) : PostResponse
+    fun createPost(request: CreatePostRequest): PostResponse
 
-    fun updatePost (request: UpdatePostRequest) : PostResponse
+    fun updatePost(request: UpdatePostRequest): PostResponse
 
-    fun deletePost (request: DeletePostRequest)
+    fun deletePost(request: DeletePostRequest)
 
-    fun createReplyPost (postId:Long, parentPostId:Long, request: CreateReplyPostRequest) : PostResponse
 }
