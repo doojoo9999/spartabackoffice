@@ -40,4 +40,11 @@ class UserServiceImpl(
         val token = jwtPlugin.generateAccessToken(user.id.toString(), user.email, user.role)
         return Pair(user.toResponse(), token)
     }
+
+    @Transactional(readOnly = true)
+    override fun getUser(userId: Long): UserResponse {
+        val user = userRepository.findById(userId)
+            .orElseThrow { IllegalArgumentException("해당 ID를 가진 사용자가 존재하지 않습니다.") }
+        return user.toResponse()
+    }
 }

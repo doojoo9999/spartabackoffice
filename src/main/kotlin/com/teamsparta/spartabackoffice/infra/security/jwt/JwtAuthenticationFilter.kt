@@ -42,7 +42,11 @@ class JwtAuthenticationFilter (
                     )
                     SecurityContextHolder.getContext().authentication = authentication
                 }
-
+                .onFailure {
+                    // 토큰이 유효하지 않는 경우, 에러 메시지 출력
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token")
+                    return
+                }
         }
 
         filterChain.doFilter(request, response)

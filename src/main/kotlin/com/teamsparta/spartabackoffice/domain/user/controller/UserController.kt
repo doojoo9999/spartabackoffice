@@ -6,10 +6,7 @@ import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
 import com.teamsparta.spartabackoffice.domain.user.service.UserService
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1")
@@ -27,6 +24,12 @@ class UserController(private val userService: UserService) {
         return ResponseEntity.ok()
             .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
             .body(memberResponse)
+    }
+
+    @GetMapping("/users/{userId}")
+    fun getUser(@PathVariable userId: Long): ResponseEntity<UserResponse> {
+        val userResponse = userService.getUser(userId)
+        return ResponseEntity.ok(userResponse)
     }
 
 }
