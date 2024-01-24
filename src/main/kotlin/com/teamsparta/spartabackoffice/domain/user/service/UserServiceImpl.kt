@@ -6,7 +6,9 @@ import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
 import com.teamsparta.spartabackoffice.domain.user.model.UserEntity
 import com.teamsparta.spartabackoffice.domain.user.model.toResponse
 import com.teamsparta.spartabackoffice.domain.user.repository.UserRepository
+import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import com.teamsparta.spartabackoffice.infra.security.jwt.JwtPlugin
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -17,7 +19,6 @@ class UserServiceImpl(
     private val passwordEncoder: PasswordEncoder,
     private val jwtPlugin: JwtPlugin
 ) : UserService {
-    @Transactional
     override fun signUp(request: SignUpRequest): UserResponse {
         userRepository.findByEmail(request.email)?.let {
             throw IllegalArgumentException("이미 존재하는 이메일입니다.")
@@ -30,7 +31,6 @@ class UserServiceImpl(
         userRepository.save(user)
         return user.toResponse()
     }
-    @Transactional
     override fun login(request: LoginRequest): Pair<UserResponse, String> {
         val user = userRepository.findByEmail(request.email)
             ?: throw IllegalArgumentException("이메일 또는 비밀번호가 다릅니다.")
@@ -41,10 +41,15 @@ class UserServiceImpl(
         return Pair(user.toResponse(), token)
     }
 
-    @Transactional(readOnly = true)
     override fun getUser(userId: Long): UserResponse {
-        val user = userRepository.findById(userId)
-            .orElseThrow { IllegalArgumentException("해당 ID를 가진 사용자가 존재하지 않습니다.") }
+        val authentication = SecurityContextHolder.getContext().authentication
+        val userPrincipal = authentication.principal as UserPrincipal
+        if (userPrincipal.id != userId) {
+            throw IllegalArgumentException("요청한 사용자 ID와 토큰의 사용자 ID가 일치하지 않습니다.")
+        }
+        val user = userRepository.findById(userPrincipal.id).orElseThrow {
+            IllegalArgumentException("해당 유저를 찾을 수 없습니다.")
+        }
         return user.toResponse()
     }
 }
