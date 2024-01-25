@@ -5,9 +5,11 @@ import com.teamsparta.spartabackoffice.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.spartabackoffice.domain.post.dto.response.PostResponse
 import com.teamsparta.spartabackoffice.domain.post.repository.PostRepository
 import com.teamsparta.spartabackoffice.domain.post.service.PostService
+import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import org.apache.coyote.Response
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/api/v1/post")
@@ -19,11 +21,12 @@ class PostController(
 
     @PostMapping()
     fun createPost(
-        @RequestBody createPostRequest: CreatePostRequest
+        @RequestBody createPostRequest: CreatePostRequest,
+        @AuthenticationPrincipal userPrincipal : UserPrincipal
     ) : ResponseEntity<PostResponse> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(postService.createPost(createPostRequest))
+            .body(postService.createPost(createPostRequest, userPrincipal))
     }
 
     @GetMapping()
@@ -36,15 +39,17 @@ class PostController(
     @PutMapping("/{postId}")
     fun updatePostList(
         @PathVariable postId: String,
-        @RequestBody updatePostRequest: UpdatePostRequest
+        @RequestBody updatePostRequest: UpdatePostRequest,
+        @AuthenticationPrincipal userPrincipal : UserPrincipal
     ):ResponseEntity<PostResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(postService.updatePost(updatePostRequest))
+            .body(postService.updatePost(updatePostRequest, userPrincipal))
     }
     @DeleteMapping("/{postId}")
     fun deletePost(
-        @PathVariable postId:String
+        @PathVariable postId:String,
+        @AuthenticationPrincipal userPrincipal : UserPrincipal
         ) : ResponseEntity<Unit> {
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)

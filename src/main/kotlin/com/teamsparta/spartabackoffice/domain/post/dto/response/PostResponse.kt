@@ -9,5 +9,4 @@ data class PostResponse (
     val content : String,
     val private : Boolean = false ,
     val complete : Complete?,
-    val parentCommentId : Long?
 )

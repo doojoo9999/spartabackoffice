@@ -12,6 +12,7 @@ import com.teamsparta.spartabackoffice.domain.post.model.toResponse
 import com.teamsparta.spartabackoffice.domain.post.repository.PostRepository
 import com.teamsparta.spartabackoffice.domain.user.model.UserEntity
 import com.teamsparta.spartabackoffice.domain.user.repository.UserRepository
+import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
@@ -21,8 +22,11 @@ class PostServiceImpl (
     val userRepository: UserRepository
 )
     : PostService {
-    override fun createPost(request: CreatePostRequest): PostResponse {
-        val user = userRepository.findByIdOrNull(request.userId) ?: throw IllegalStateException ("User Not Found")
+    override fun createPost(request: CreatePostRequest, userPrincipal : UserPrincipal): PostResponse {
+
+        val userId = userPrincipal.id
+
+        val user = userRepository.findByIdOrNull(userId) ?: throw IllegalStateException ("User Not Found")
         return postRepository.save(
             PostEntity (
                 title = request.title,
@@ -38,11 +42,13 @@ class PostServiceImpl (
         return postRepository.findAll().map {it.toResponse()}
     }
 
-    override fun updatePost(request: UpdatePostRequest): PostResponse {
-        val user = userRepository.findByIdOrNull(request.userId) ?: throw IllegalStateException ("User Not Found")
+    override fun updatePost(request: UpdatePostRequest, userPrincipal : UserPrincipal): PostResponse {
+        val userId = userPrincipal.id
+
+        val user = userRepository.findByIdOrNull(userId) ?: throw IllegalStateException ("User Not Found")
         val post = postRepository.findByIdOrNull(request.postId) ?: throw IllegalStateException ("Post Not Found")
 
-        val (userId, id, title, content, private) = request
+        val (id, title, content, private) = request
 
         post.user = user
         post.id = id
@@ -53,8 +59,11 @@ class PostServiceImpl (
         return postRepository.save(post).toResponse()
     }
 
-    override fun deletePost(request: DeletePostRequest) {
-        val user = userRepository.findByIdOrNull(request.userId) ?: throw IllegalStateException ("User Not Found")
+    override fun deletePost(request: DeletePostRequest, userPrincipal : UserPrincipal) {
+
+        val userId = userPrincipal.id
+
+        val user = userRepository.findByIdOrNull(userId) ?: throw IllegalStateException ("User Not Found")
         val post = postRepository.findByIdOrNull(request.postId) ?: throw IllegalStateException ("Post Not Found")
 
         postRepository.delete(post)

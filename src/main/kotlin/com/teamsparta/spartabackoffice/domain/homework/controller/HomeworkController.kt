@@ -25,7 +25,7 @@ class HomeworkController (
     ) : ResponseEntity <SubmitResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(homeworkService.submitHomework(file, submitRequest))
+            .body(homeworkService.submitHomework(file, submitRequest, userPrincipal))
     }
 
 }

@@ -7,6 +7,7 @@ import com.teamsparta.spartabackoffice.domain.homework.model.HomeworkEntity
 import com.teamsparta.spartabackoffice.domain.homework.repository.HomeworkRepository
 import com.teamsparta.spartabackoffice.domain.post.model.Complete
 import com.teamsparta.spartabackoffice.domain.user.repository.UserRepository
+import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.runBlocking
@@ -14,6 +15,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
+import java.security.Principal
 import java.util.*
 
 
@@ -27,7 +29,7 @@ class HomeworkServiceImpl(
     ): HomeworkService {
 
 
-    override fun submitHomework(file: MultipartFile, request: SubmitRequest): SubmitResponse {
+    override fun submitHomework(file: MultipartFile, request: SubmitRequest, userPrincipal : UserPrincipal): SubmitResponse {
 
         val BUCKET_NAME = "homework"
         val filePath = UUID.randomUUID().toString() + '.' + (file.originalFilename!!.split('.')[1])
@@ -45,7 +47,7 @@ class HomeworkServiceImpl(
 //        val userId = userPrincipal.id
 //        val userId = userAuthentication.getUserId()
 
-        val userId = 2L
+        val userId = userPrincipal.id
 
         val user = userRepository.findByIdOrNull(userId) ?: throw ModelNotFoundException("user", userId)
 
