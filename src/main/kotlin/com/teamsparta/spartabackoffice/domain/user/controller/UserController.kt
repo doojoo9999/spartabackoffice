@@ -32,4 +32,11 @@ class UserController(private val userService: UserService) {
         return ResponseEntity.ok(userResponse)
     }
 
+    @DeleteMapping("/users/withdraw/{userId}")
+    fun deleteUser(@PathVariable userId: Long): ResponseEntity<Void> {
+        userService.deleteUser(userId)
+        return ResponseEntity.noContent().build()
+    }
+
+
 }

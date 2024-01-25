@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional
 class UserServiceImpl(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
@@ -51,5 +52,18 @@ class UserServiceImpl(
             IllegalArgumentException("해당 유저를 찾을 수 없습니다.")
         }
         return user.toResponse()
+    }
+
+    override fun deleteUser(userId: Long) {
+        val authentication = SecurityContextHolder.getContext().authentication
+        val userPrincipal = authentication.principal as UserPrincipal
+        if (userPrincipal.id != userId) {
+            throw IllegalArgumentException("요청한 사용자 ID와 토큰의 사용자 ID가 일치하지 않습니다.")
+        }
+        userRepository.findById(userId).orElseThrow {
+            IllegalArgumentException("해당 유저를 찾을 수 없습니다.")
+        }.also {
+            userRepository.delete(it)
+        }
     }
 }

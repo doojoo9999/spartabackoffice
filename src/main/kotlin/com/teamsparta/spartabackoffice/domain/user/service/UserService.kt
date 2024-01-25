@@ -8,5 +8,5 @@ interface UserService {
     fun signUp(request: SignUpRequest): UserResponse
     fun login(request: LoginRequest): Pair<UserResponse, String>
     fun getUser(userId: Long): UserResponse
-    //fun logout(token: String): String
+    fun deleteUser(userId: Long)
 }
