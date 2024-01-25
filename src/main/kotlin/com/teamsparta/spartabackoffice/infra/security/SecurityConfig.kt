@@ -34,7 +34,7 @@ class SecurityConfig(
                     "/api/**"
                 ).permitAll()
                     //위 URI를 제외하고는 모두 인증과정을 거치겠음.
-                    .anyRequest().authenticated()
+//                    .anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .exceptionHandling {

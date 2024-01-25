@@ -17,7 +17,7 @@ class UserServiceImpl(
     private val passwordEncoder: PasswordEncoder,
     private val jwtPlugin: JwtPlugin
 ) : UserService {
-    @Transactional
+
     override fun signUp(request: SignUpRequest): UserResponse {
         userRepository.findByEmail(request.email)?.let {
             throw IllegalArgumentException("이미 존재하는 이메일입니다.")
@@ -30,7 +30,7 @@ class UserServiceImpl(
         userRepository.save(user)
         return user.toResponse()
     }
-    @Transactional
+
     override fun login(request: LoginRequest): Pair<UserResponse, String> {
         val user = userRepository.findByEmail(request.email)
             ?: throw IllegalArgumentException("이메일 또는 비밀번호가 다릅니다.")
@@ -41,7 +41,7 @@ class UserServiceImpl(
         return Pair(user.toResponse(), token)
     }
 
-    @Transactional(readOnly = true)
+
     override fun getUser(userId: Long): UserResponse {
         val user = userRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("해당 ID를 가진 사용자가 존재하지 않습니다.") }
