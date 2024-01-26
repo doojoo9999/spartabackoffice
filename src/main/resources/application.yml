@@ -41,6 +41,6 @@ auth:
 
 supabase:
   url : "https://ufkrrzcfwlvxdonidpfz.supabase.co"
-  key : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVma3JyemNmd2x2eGRvbmlkcGZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDU5MDU1NjUsImV4cCI6MjAyMTQ4MTU2NX0.pLu0EUQtRMBXId1WrX6bXTO8R-XID-T-4eQJP-0t5HA"
+  key : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVma3JyemNmd2x2eGRvbmlkcGZ6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcwNTkwNTU2NSwiZXhwIjoyMDIxNDgxNTY1fQ.gbMZkTLOQ5AQGU0YbCekxruTpsliYeAK3qitmFP4gBQ"
 
 

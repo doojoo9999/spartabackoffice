@@ -41,7 +41,6 @@ fun PostEntity.toResponse() : PostResponse {
         title = title,
         content = content,
         private = private,
-        complete = complete,
-        parentCommentId = null
+        complete = complete
     )
 }

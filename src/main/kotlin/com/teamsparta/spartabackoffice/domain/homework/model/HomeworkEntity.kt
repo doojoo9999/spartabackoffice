@@ -8,23 +8,24 @@ import io.github.jan.supabase.storage.Storage
 import jakarta.persistence.*
 
 @Entity
+@Table(name = "homeworks")
 class HomeworkEntity(
     @JoinColumn (name = "userId", nullable = false)
     @ManyToOne
-    val userId: UserEntity,
+    val user: UserEntity,
 
     @Column (name = "title", nullable = false)
-    val title : String,
+    val title : String?,
 
     @Column (name = "content", nullable = true)
-    val content : String,
+    val content : String?,
 
     @Column (name = "complete", nullable = false)
     @Enumerated(EnumType.STRING)
-    val complete : Complete,
+    val complete : Complete?,
 
     @Column (name = "grade", nullable = true)
-    val grade : String,
+    val grade : String?,
 
 ) {
     @Id
