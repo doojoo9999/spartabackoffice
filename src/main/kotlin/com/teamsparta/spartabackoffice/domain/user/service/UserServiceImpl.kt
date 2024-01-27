@@ -8,6 +8,7 @@ import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdateUserRequest
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UpdateUserResponse
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
 import com.teamsparta.spartabackoffice.domain.user.model.UserEntity
+import com.teamsparta.spartabackoffice.domain.user.model.UserRole
 import com.teamsparta.spartabackoffice.domain.user.model.toResponse
 import com.teamsparta.spartabackoffice.domain.user.repository.UserRepository
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
@@ -32,7 +33,8 @@ class UserServiceImpl(
         val user = UserEntity(
             email = request.email,
             password = passwordEncoder.encode(request.password),
-            name = request.name
+            name = request.name,
+            role = UserRole.ROLE_student
         )
         userRepository.save(user)
         return user.toResponse()
