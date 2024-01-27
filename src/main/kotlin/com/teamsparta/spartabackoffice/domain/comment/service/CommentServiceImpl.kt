@@ -1,5 +1,18 @@
 package com.teamsparta.spartabackoffice.domain.comment.service
 
+import com.teamsparta.spartabackoffice.domain.comment.dto.request.CreateCommentRequest
+import com.teamsparta.spartabackoffice.domain.comment.dto.request.UpdateCommentRequest
+import com.teamsparta.spartabackoffice.domain.comment.dto.response.CommentResponse
+import com.teamsparta.spartabackoffice.domain.comment.model.CommentEntity
+import com.teamsparta.spartabackoffice.domain.comment.model.toResponse
+import com.teamsparta.spartabackoffice.domain.comment.repository.CommentRepository
+import com.teamsparta.spartabackoffice.domain.post.repository.PostRepository
+import com.teamsparta.spartabackoffice.domain.user.repository.UserRepository
+import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Service
+
+
 @Service
 class CommentServiceImpl(
     val userRepository : UserRepository,

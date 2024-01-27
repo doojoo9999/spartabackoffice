@@ -8,7 +8,13 @@ import jakarta.persistence.*
 class UserEntity(
     email: String,
     password: String,
-    name: String
+    name: String,
+
+    @ElementCollection
+    @CollectionTable(name = "user_old_passwords", joinColumns = [JoinColumn(name="user_id")])
+    @Column(name = "old_passwords")
+    val oldPasswords: MutableList<String> = mutableListOf()
+
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +32,9 @@ class UserEntity(
 
     @Column(nullable = false)
     var role: String = "USER"
+
+
+
 }
 
 fun UserEntity.toResponse() : UserResponse {

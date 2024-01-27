@@ -1,7 +1,9 @@
 package com.teamsparta.spartabackoffice.domain.user.service
 
+import com.teamsparta.spartabackoffice.domain.exception.ModelNotFoundException
 import com.teamsparta.spartabackoffice.domain.user.dto.request.LoginRequest
 import com.teamsparta.spartabackoffice.domain.user.dto.request.SignUpRequest
+import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdatePasswordRequest
 import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdateUserRequest
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UpdateUserResponse
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
@@ -10,6 +12,7 @@ import com.teamsparta.spartabackoffice.domain.user.model.toResponse
 import com.teamsparta.spartabackoffice.domain.user.repository.UserRepository
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import com.teamsparta.spartabackoffice.infra.security.jwt.JwtPlugin
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -57,10 +60,20 @@ class UserServiceImpl(
     }
 
 
-    override fun updateUser(userId: Long, request: UpdateUserRequest): UpdateUserResponse {
-        // TODO: DB에서 courseId에 해당하는 Course를 가져와서 request로 업데이트 후 DB에 저장, 결과를 CourseResponse로 변환 후 반환
-        TODO()
+    @Transactional
+    override fun updateUser(
+        userId: Long,
+        request: UpdateUserRequest
+    ): UpdateUserResponse {
 
+        val user = userRepository.findByIdOrNull(userId)
+                ?: throw IllegalArgumentException("유저 정보를 다시 확인해 주세요.")
+
+            user.email = request.email
+
+            userRepository.save(user)
+
+            return UpdateUserResponse(user.email)
 
     }
 
@@ -77,4 +90,33 @@ class UserServiceImpl(
             userRepository.delete(it)
         }
     }
+
+    override fun updatePassword(userPrincipal: UserPrincipal, request: UpdatePasswordRequest): Any {
+        val user = userRepository.findByIdOrNull(userPrincipal.id) ?: throw ModelNotFoundException ("UserId", userPrincipal.id)
+
+        if (!passwordEncoder.matches(request.oldPassword, user.password)) {
+            throw IllegalArgumentException ("비밀번호가 틀렸습니다.")
+        }
+
+        if (passwordEncoder.matches(request.newPassword, request.confirmPassword)) {
+            throw IllegalArgumentException("새 비밀번호와 확인 비밀번호가 다릅니다.")
+        }
+
+        if (user.oldPasswords.any { passwordEncoder.matches(request.newPassword, it)}) {
+            throw IllegalStateException("3회 안에 사용되었던 비밀번호를 재사용할 수 없습니다.")
+        }
+
+        user.password = passwordEncoder.encode(request.newPassword)
+        user.oldPasswords.add(user.password)
+
+        if (user.oldPasswords.size > 3) {
+            user.oldPasswords.removeAt(0)
+        }
+
+        userRepository.save(user)
+
+        return "비밀번호 변경 완료"
+    }
+
+
 }
