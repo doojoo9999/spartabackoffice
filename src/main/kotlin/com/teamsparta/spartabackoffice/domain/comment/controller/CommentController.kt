@@ -42,8 +42,39 @@ class CommentController(
             .body(updateComment)
     }
 
-    //댓글 삭제
+    @PutMapping("/{commentId}")
+    fun updateComment(
+        @PathVariable postId: Long,
+        @PathVariable commentId: Long,
+        @RequestBody updateCommentRequest: UpdateCommentRequest,
+        @AuthenticationPrincipal userPrincipal: UserPrincipal
+    ) : ResponseEntity<CommentResponse> {
+        return  ResponseEntity
+            .status(HttpStatus.OK)
+            .body(commentService.updateComment(postId, commentId, updateCommentRequest, userPrincipal))
+
+
+    }
     @DeleteMapping("/{commentId}")
+    fun deleteComment(
+        @PathVariable postId: Long,
+        @PathVariable commentId: Long,
+        @AuthenticationPrincipal userPrincipal: UserPrincipal
+    ) : ResponseEntity<Unit> {
+
+        commentService.deleteComment(postId, commentId, userPrincipal)
+
+        return ResponseEntity
+            .status(HttpStatus.NO_CONTENT)
+            .build()
+    }
+    @GetMapping( )
+    fun getCommentList() : ResponseEntity<List<CommentResponse>> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(commentService.getCommentList())
+
+    }
 
     fun deleteComment(@PathVariable commentId: Long
     ): ResponseEntity<String>{

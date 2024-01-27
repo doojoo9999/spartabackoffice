@@ -2,6 +2,8 @@ package com.teamsparta.spartabackoffice.domain.user.service
 
 import com.teamsparta.spartabackoffice.domain.user.dto.request.LoginRequest
 import com.teamsparta.spartabackoffice.domain.user.dto.request.SignUpRequest
+import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdateUserRequest
+import com.teamsparta.spartabackoffice.domain.user.dto.response.UpdateUserResponse
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
 import com.teamsparta.spartabackoffice.domain.user.model.UserEntity
 import com.teamsparta.spartabackoffice.domain.user.model.toResponse
@@ -53,6 +55,15 @@ class UserServiceImpl(
         }
         return user.toResponse()
     }
+
+
+    override fun updateUser(userId: Long, request: UpdateUserRequest): UpdateUserResponse {
+        // TODO: DB에서 courseId에 해당하는 Course를 가져와서 request로 업데이트 후 DB에 저장, 결과를 CourseResponse로 변환 후 반환
+        TODO()
+
+
+    }
+
 
     override fun deleteUser(userId: Long) {
         val authentication = SecurityContextHolder.getContext().authentication

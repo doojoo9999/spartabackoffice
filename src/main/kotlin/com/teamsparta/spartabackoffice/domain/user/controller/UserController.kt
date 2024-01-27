@@ -2,6 +2,7 @@ package com.teamsparta.spartabackoffice.domain.user.controller
 
 import com.teamsparta.spartabackoffice.domain.user.dto.request.LoginRequest
 import com.teamsparta.spartabackoffice.domain.user.dto.request.SignUpRequest
+import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdateUserRequest
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
 import com.teamsparta.spartabackoffice.domain.user.service.UserService
 import org.springframework.http.HttpHeaders
@@ -30,6 +31,11 @@ class UserController(private val userService: UserService) {
     fun getUser(@PathVariable userId: Long): ResponseEntity<UserResponse> {
         val userResponse = userService.getUser(userId)
         return ResponseEntity.ok(userResponse)
+    }
+
+    @PutMapping("/users/{userId}")
+    fun updateUser(@PathVariable userId: Long, @RequestBody request:UpdateUserRequest): ResponseEntity<Unit> {
+        return  ResponseEntity.ok(userService.updateUser(userId,request))
     }
 
     @DeleteMapping("/users/withdraw/{userId}")

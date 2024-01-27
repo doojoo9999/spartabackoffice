@@ -1,29 +1,25 @@
 package com.teamsparta.spartabackoffice.domain.comment.model
 
-import com.teamsparta.spartabackoffice.domain.comment.dto.reponse.CommentResponse
-import com.teamsparta.spartabackoffice.domain.post.model.PostEntity
-import jakarta.persistence.*
-
 @Entity
+@Table (name = "comments")
 class CommentEntity(
 
-    @Column(name = "content")
-    var content: String,
+    @JoinColumn (name = "userId", nullable = false)
+    @ManyToOne
+    var user : UserEntity,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    var post: PostEntity,
+    @JoinColumn (name = "postId")
+    @ManyToOne
+    var post : PostEntity,
 
-//    @Column(name = "user_id")
-//    var user: UserEntity
+
+    @Column (name = "content")
+    var content : String,
+
 ) {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0
-}
 
-fun CommentEntity.toResponse() : CommentResponse {
-    return CommentResponse(
-        postId = post.id,
-        content = content
-    )
+    @Id
+    @GeneratedValue (strategy = jakarta.persistence.GenerationType.IDENTITY)
+    var id : Long = 0
+
 }
