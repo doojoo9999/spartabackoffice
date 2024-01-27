@@ -1,20 +1,19 @@
 package com.teamsparta.spartabackoffice.domain.post.service
 
-import com.teamsparta.spartabackoffice.domain.exception.ModelNotFoundException
 import com.teamsparta.spartabackoffice.domain.post.dto.request.CreatePostRequest
-import com.teamsparta.spartabackoffice.domain.post.dto.request.CreateReplyPostRequest
-import com.teamsparta.spartabackoffice.domain.post.dto.request.DeletePostRequest
 import com.teamsparta.spartabackoffice.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.spartabackoffice.domain.post.dto.response.PostResponse
 import com.teamsparta.spartabackoffice.domain.post.model.Complete
 import com.teamsparta.spartabackoffice.domain.post.model.PostEntity
 import com.teamsparta.spartabackoffice.domain.post.model.toResponse
 import com.teamsparta.spartabackoffice.domain.post.repository.PostRepository
-import com.teamsparta.spartabackoffice.domain.user.model.UserEntity
+import com.teamsparta.spartabackoffice.domain.user.model.UserRole
 import com.teamsparta.spartabackoffice.domain.user.repository.UserRepository
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import java.nio.file.AccessDeniedException
 
 @Service
 class PostServiceImpl (
@@ -48,24 +47,32 @@ class PostServiceImpl (
         val user = userRepository.findByIdOrNull(userId) ?: throw IllegalStateException ("User Not Found")
         val post = postRepository.findByIdOrNull(request.postId) ?: throw IllegalStateException ("Post Not Found")
 
-        val (id, title, content, private) = request
+        val (id, title, content, private, complete) = request
 
         post.user = user
         post.id = id
         post.title = title
         post.content = content
         post.private = private
+        post.complete = complete
 
         return postRepository.save(post).toResponse()
     }
 
-    override fun deletePost(request: DeletePostRequest, userPrincipal : UserPrincipal) {
+    @Transactional
+    override fun deletePost(postId: Long, userPrincipal : UserPrincipal){
 
         val userId = userPrincipal.id
 
         val user = userRepository.findByIdOrNull(userId) ?: throw IllegalStateException ("User Not Found")
-        val post = postRepository.findByIdOrNull(request.postId) ?: throw IllegalStateException ("Post Not Found")
+        val post = postRepository.findByIdOrNull(postId) ?: throw IllegalStateException ("Post Not Found")
 
-        postRepository.delete(post)
+
+        if (post.user.id == userId || user.role == UserRole.ROLE_admin) {
+            postRepository.delete(post)
+        } else {
+            throw AccessDeniedException ("본인의 게시글만 삭제할 수 있습니다.")
+        }
+
     }
 }

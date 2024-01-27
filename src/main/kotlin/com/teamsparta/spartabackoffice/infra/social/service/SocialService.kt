@@ -1,10 +1,10 @@
 package com.teamsparta.spartabackoffice.infra.social.service
 
 import com.teamsparta.spartabackoffice.domain.user.model.UserEntity
+import com.teamsparta.spartabackoffice.domain.user.model.UserRole
 import com.teamsparta.spartabackoffice.domain.user.repository.UserRepository
 import com.teamsparta.spartabackoffice.infra.social.jwt.JwtDto
 import com.teamsparta.spartabackoffice.infra.social.jwt.JwtProvider
-import com.teamsparta.spartabackoffice.infra.social.role.AuthType
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -19,7 +19,7 @@ class SocialService(
     @Transactional
     fun socialLogin(oAuth2User: OAuth2User) : JwtDto {
         val email = oAuth2User.attributes["email"] as String
-        val role = AuthType.student
+        val role = UserRole.ROLE_student
         if(!userRepository.existsByEmail(oAuth2User.attributes["email"] as String)) {
             val user = UserEntity(
                 email = email,

@@ -2,14 +2,21 @@ package com.teamsparta.spartabackoffice.domain.user.controller
 
 import com.teamsparta.spartabackoffice.domain.user.dto.request.LoginRequest
 import com.teamsparta.spartabackoffice.domain.user.dto.request.SignUpRequest
+import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdatePasswordRequest
+import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdateUserRequest
+import com.teamsparta.spartabackoffice.domain.user.dto.response.UpdateUserResponse
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
 import com.teamsparta.spartabackoffice.domain.user.service.UserService
 import com.teamsparta.spartabackoffice.infra.social.jwt.JwtDto
 import com.teamsparta.spartabackoffice.infra.social.service.SocialService
+import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+
 import org.springframework.security.oauth2.core.user.OAuth2User
+
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -39,6 +46,17 @@ class UserController(
         return ResponseEntity.ok(userResponse)
     }
 
+    @PutMapping("/users/{userId}")
+    fun updateUser(
+        @PathVariable userId: Long,
+        @RequestBody request:UpdateUserRequest
+    ): ResponseEntity<UpdateUserResponse> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(userService.updateUser(userId, request))
+
+    }
+
     @DeleteMapping("/users/withdraw/{userId}")
     fun deleteUser(@PathVariable userId: Long): ResponseEntity<Void> {
         userService.deleteUser(userId)
@@ -50,6 +68,15 @@ class UserController(
     fun socialLogin(@AuthenticationPrincipal oAuth2User: OAuth2User): ResponseEntity<JwtDto> {
 
         return ResponseEntity.ok(socialService.socialLogin(oAuth2User))
+    }
+    @PutMapping("/password")
+    fun updatePassword(
+        @AuthenticationPrincipal userPrincipal: UserPrincipal,
+        @RequestBody request: UpdatePasswordRequest
+    ) : ResponseEntity<Any> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(userService.updatePassword(userPrincipal, request))
     }
 
 }
