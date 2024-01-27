@@ -67,13 +67,13 @@ class UserServiceImpl(
     ): UpdateUserResponse {
 
         val user = userRepository.findByIdOrNull(userId)
-                ?: throw IllegalArgumentException("유저 정보를 다시 확인해 주세요.")
+            ?: throw IllegalArgumentException("유저 정보를 다시 확인해 주세요.")
 
-            user.email = request.email
+        user.email = request.email
 
-            userRepository.save(user)
+        userRepository.save(user)
 
-            return UpdateUserResponse(user.email)
+        return UpdateUserResponse(user.email)
 
     }
 

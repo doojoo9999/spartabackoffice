@@ -1,6 +1,7 @@
 package com.teamsparta.spartabackoffice.domain.post.controller
 
 import com.teamsparta.spartabackoffice.domain.post.dto.request.CreatePostRequest
+import com.teamsparta.spartabackoffice.domain.post.dto.request.DeletePostRequest
 import com.teamsparta.spartabackoffice.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.spartabackoffice.domain.post.dto.response.PostResponse
 import com.teamsparta.spartabackoffice.domain.post.repository.PostRepository
@@ -38,7 +39,7 @@ class PostController(
 
     @PutMapping("/{postId}")
     fun updatePostList(
-        @PathVariable postId: String,
+        @PathVariable postId: Long,
         @RequestBody updatePostRequest: UpdatePostRequest,
         @AuthenticationPrincipal userPrincipal : UserPrincipal
     ):ResponseEntity<PostResponse> {
@@ -48,9 +49,12 @@ class PostController(
     }
     @DeleteMapping("/{postId}")
     fun deletePost(
-        @PathVariable postId:String,
+        @PathVariable postId:Long,
         @AuthenticationPrincipal userPrincipal : UserPrincipal
         ) : ResponseEntity<Unit> {
+
+        postService.deletePost(postId, userPrincipal)
+
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)
             .build()

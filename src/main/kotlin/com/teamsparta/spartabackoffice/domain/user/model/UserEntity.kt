@@ -13,7 +13,11 @@ class UserEntity(
     @ElementCollection
     @CollectionTable(name = "user_old_passwords", joinColumns = [JoinColumn(name="user_id")])
     @Column(name = "old_passwords")
-    val oldPasswords: MutableList<String> = mutableListOf()
+    val oldPasswords: MutableList<String> = mutableListOf(),
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    val role: UserRole
 
 ) {
     @Id
@@ -30,8 +34,7 @@ class UserEntity(
     @Column(nullable = false)
     var name = name
 
-    @Column(nullable = false)
-    var role: String = "USER"
+
 
 
 
