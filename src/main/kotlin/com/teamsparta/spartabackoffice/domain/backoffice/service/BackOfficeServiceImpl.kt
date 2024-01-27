@@ -13,19 +13,4 @@ class BackOfficeServiceImpl : BackOfficeService {
         TODO("Not yet implemented")
     }
 
-    override fun getPostsByUserId(): List<GetPostResponse> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getCommentsByUserId(): List<GetCommentResponse> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getHomeworksByUserId(): List<GetHomeworkResponse> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getHomeworkListByDate(): List<GetHomeworkResponse> {
-        TODO("Not yet implemented")
-    }
 }

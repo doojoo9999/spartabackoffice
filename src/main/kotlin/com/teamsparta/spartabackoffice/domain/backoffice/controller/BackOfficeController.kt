@@ -18,18 +18,7 @@ class BackOfficeController {
         @AuthenticationPrincipal userPrincipal: UserPrincipal
     ) : ResponseEntity<List<NotCompletedPostResponse>> {
 
-
     }
-
-    fun getHomeworkListByDate(){}
-
-    fun getPostsByUserId() {
-    }
-
-    fun getCommentsByUserId() {
-
-    }
-    fun getHomeworksByUserId() {
 
     }
 

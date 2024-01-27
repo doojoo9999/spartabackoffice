@@ -12,10 +12,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 interface BackOfficeService {
 
     fun getNotCompletedPostList(@AuthenticationPrincipal userPrincipal: UserPrincipal): List<NotCompletedPostResponse>
-    fun getPostsByUserId(): List<GetPostResponse>
 
-    fun getCommentsByUserId(): List<GetCommentResponse>
-    fun getHomeworksByUserId(): List<GetHomeworkResponse>
-
-    fun getHomeworkListByDate(): List<GetHomeworkResponse>
 }
+
