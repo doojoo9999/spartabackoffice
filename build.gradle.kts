@@ -68,8 +68,8 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:storage-kt:2.0.4")
     implementation("io.ktor:ktor-client-cio:2.3.7")
 
-
-
+    //oauth2 소셜로그인
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 
 }
 

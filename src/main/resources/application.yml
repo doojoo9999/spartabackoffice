@@ -19,6 +19,16 @@ spring:
       max-file-size : 2MB
       max-request-size : 5MB
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 715849965814-g5lltfgihfspouqam9m7qjntmm37e109.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
 logging:
   level:
     org:

@@ -1,38 +1,27 @@
 package com.teamsparta.spartabackoffice.domain.user.model
 
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
+import com.teamsparta.spartabackoffice.infra.social.role.AuthType
 import jakarta.persistence.*
 
-@Entity
-@Table(name = "users")
+@Entity(name="users")
 class UserEntity(
-    email: String,
-    password: String,
-    name: String
+    var email: String,
+    var password: String?,
+    var name: String?,
+    @Enumerated(EnumType.STRING)
+    var role: AuthType = AuthType.student
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
-    //var id: Long = 0
 
-    @Column(nullable = false)
-    var email = email
-
-    @Column(nullable = false)
-    var password = password
-
-    @Column(nullable = false)
-    var name = name
-
-    @Column(nullable = false)
-    var role: String = "USER"
-}
-
-fun UserEntity.toResponse() : UserResponse {
-    return UserResponse(
-        id = id,
-        email = email,
-        name = name,
-        role = role
-    )
+    fun toResponse() : UserResponse {
+        return UserResponse(
+            id = id,
+            email = email,
+            name = name,
+            role = role.name
+        )
+    }
 }
