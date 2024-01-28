@@ -2,6 +2,7 @@ package com.teamsparta.spartabackoffice.infra.security
 
 import com.teamsparta.spartabackoffice.infra.security.jwt.CustomAccessDeniedHandler
 import com.teamsparta.spartabackoffice.infra.security.jwt.JwtAuthenticationFilter
+import com.teamsparta.spartabackoffice.infra.social.jwt.SocialJwtAuthenticationFilter
 import com.teamsparta.spartabackoffice.infra.social.service.CustomUserDetailService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -20,7 +21,8 @@ class SecurityConfig(
     private val jwtAuthenticationFilter: JwtAuthenticationFilter,
     private val authenticationEntryPoint: AuthenticationEntryPoint,
     private val accessDeniedHandler: CustomAccessDeniedHandler,
-    private val customUserDetailService: CustomUserDetailService //소셜로그인
+    private val customUserDetailService: CustomUserDetailService, //소셜로그인
+    private val socialJwtAuthenticationFilter: SocialJwtAuthenticationFilter,
 ) {
 
     @Bean
@@ -47,6 +49,7 @@ class SecurityConfig(
 //                    .anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(socialJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .exceptionHandling {
                 it.authenticationEntryPoint(authenticationEntryPoint)
                 it.accessDeniedHandler(accessDeniedHandler)

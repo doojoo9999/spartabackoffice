@@ -72,7 +72,7 @@ class UserController(
     @GetMapping("/login")
     fun socialLogin(@AuthenticationPrincipal oAuth2User: OAuth2User): ResponseEntity<JwtDto> {
         //이거 추가됨!!!
-        return ResponseEntity.ok(socialService.login(oAuth2User))
+        return ResponseEntity.ok(socialService.socialLogin(oAuth2User))
     }
 
     @PutMapping("/password")

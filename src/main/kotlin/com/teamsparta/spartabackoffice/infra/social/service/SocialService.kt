@@ -1,6 +1,7 @@
 package com.teamsparta.spartabackoffice.infra.social.service
 
 import com.teamsparta.spartabackoffice.domain.exception.EmailNotFoundException
+import com.teamsparta.spartabackoffice.domain.user.model.Platform
 import com.teamsparta.spartabackoffice.domain.user.model.UserRole
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import com.teamsparta.spartabackoffice.infra.social.dto.SocialResponse
@@ -20,18 +21,22 @@ class SocialService(
 ) {
 
     @Transactional
-    fun login(oAuth2User: OAuth2User) : JwtDto {
-        //TODO: 1. 회원이 아니라면 회원 가입을 시켜준다.
-        if(!socialRepository.existsByEmail(oAuth2User.attributes["email"] as String)) {
-            val member = SocialEntity(
-                email = oAuth2User.attributes["email"] as String,
-                role = UserRole.ROLE_student
+    fun socialLogin(oAuth2User: OAuth2User) : JwtDto {
+        val email = oAuth2User.attributes["email"] as String
+        val platform = Platform.GOOGLE
+        val member = if(!socialRepository.existsByEmail(email)) {
+            val newMember = SocialEntity(
+                email = email,
+                role = UserRole.ROLE_student,
+                platform = platform
             )
-            socialRepository.save(member)
+            socialRepository.save(newMember)
+            newMember
+        } else {
+            socialRepository.findByEmail(email)!!
         }
 
-        //TODO: 2. token 을 생성해준다.
-        return jwtProvider.generateJwtDto(oAuth2User)
+        return jwtProvider.generateJwtDto(oAuth2User, member.id.toString(), member.role.name, platform.name)
     }
 
     fun getSocialUser(socialId: Long): SocialResponse {

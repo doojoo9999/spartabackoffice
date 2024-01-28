@@ -1,5 +1,6 @@
 package com.teamsparta.spartabackoffice.infra.security.jwt
 
+import com.teamsparta.spartabackoffice.domain.user.model.Platform
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
 import io.jsonwebtoken.Jwts
@@ -27,16 +28,16 @@ class JwtPlugin (
         }
     }
 
-    fun generateAccessToken(subject: String, email: String, role: String): String {
+    fun generateAccessToken(subject: String, email: String, role: String, platform: String): String {
         //subject, 만료기간과 role을 설정한다.
-        return generateToken(subject, email, role, java.time.Duration.ofHours(accessTokenExpirationHour))
+        return generateToken(subject, email, role,platform, java.time.Duration.ofHours(accessTokenExpirationHour))
 
     }
 
-    fun generateToken(subject: String, email: String, role:String, expirationPeriod: java.time.Duration): String {
+    fun generateToken(subject: String, email: String, role:String,platform: String, expirationPeriod: java.time.Duration): String {
         //custom claim을 설정한다.
         val claims:Claims = Jwts.claims()
-            .add(mapOf("role" to role, "email" to email))
+            .add(mapOf("role" to role, "email" to email,"platform" to platform))
             .build()
 
         val now = Instant.now()

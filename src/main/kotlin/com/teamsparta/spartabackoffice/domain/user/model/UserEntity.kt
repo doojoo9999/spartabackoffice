@@ -15,9 +15,14 @@ class UserEntity(
     @Column(name = "old_passwords")
     val oldPasswords: MutableList<String> = mutableListOf(),
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
-    val role: UserRole,
+    val role: UserRole?,
+
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    val platform: Platform?,
+
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +44,7 @@ fun UserEntity.toResponse() : UserResponse {
         id = id,
         email = email,
         name = name,
-        role = role
+        role = role,
+        platform = platform
     )
 }

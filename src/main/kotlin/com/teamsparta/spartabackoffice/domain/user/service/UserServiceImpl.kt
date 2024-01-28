@@ -8,6 +8,7 @@ import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdatePasswordReq
 import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdateUserRequest
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UpdateUserResponse
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
+import com.teamsparta.spartabackoffice.domain.user.model.Platform
 import com.teamsparta.spartabackoffice.domain.user.model.UserEntity
 import com.teamsparta.spartabackoffice.domain.user.model.UserRole
 import com.teamsparta.spartabackoffice.domain.user.model.toResponse
@@ -38,7 +39,8 @@ class UserServiceImpl(
             email = request.email,
             password = passwordEncoder.encode(request.password),
             name = request.name,
-            role = UserRole.ROLE_student
+            role = UserRole.ROLE_student,
+            platform = Platform.SPARTA
         )
         userRepository.save(user)
         return user.toResponse()
@@ -50,7 +52,7 @@ class UserServiceImpl(
         if (!passwordEncoder.matches(request.password, user.password)) {
             throw IllegalArgumentException("이메일 또는 비밀번호가 다릅니다.")
         }
-        val token = jwtPlugin.generateAccessToken(user.id.toString(), user.email, user.role.toString())
+        val token = jwtPlugin.generateAccessToken(user.id.toString(), user.email, user.role.toString(), user.platform.toString())
         return Pair(user.toResponse(), token)
     }
 

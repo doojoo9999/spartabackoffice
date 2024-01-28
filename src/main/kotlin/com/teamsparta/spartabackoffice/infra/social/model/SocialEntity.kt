@@ -1,5 +1,6 @@
 package com.teamsparta.spartabackoffice.infra.social.model
 
+import com.teamsparta.spartabackoffice.domain.user.model.Platform
 import com.teamsparta.spartabackoffice.domain.user.model.UserRole
 import com.teamsparta.spartabackoffice.infra.social.dto.SocialResponse
 import jakarta.persistence.*
@@ -14,13 +15,18 @@ class SocialEntity(
     var email: String,
 
     @Enumerated(EnumType.STRING)
-    var role: UserRole
+    var role: UserRole,
+
+    @Enumerated(EnumType.STRING)
+    var platform: Platform
+
 ) {
     fun toResponse(): SocialResponse {
         return SocialResponse(
             id = id,
             email = email,
-            role = role
+            role = role,
+            platform = platform
         )
     }
 }
