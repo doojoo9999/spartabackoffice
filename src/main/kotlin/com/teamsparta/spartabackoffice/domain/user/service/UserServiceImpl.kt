@@ -39,7 +39,7 @@ class UserServiceImpl(
         userRepository.findByEmail(request.email)?.let {
             throw IllegalArgumentException("이미 존재하는 이메일입니다.")
         }
-        if (!ValidationUtil.isValidUsername(request.name)) throw IllegalArgumentException("사용자 이름은 최소 4자 이상, 10자 이하이며 알파벳 소문자(a~z), 숫자(0~9)로 구성되어야 합니다.")
+        if (!ValidationUtil.isValidUsername(request.name)) throw IllegalArgumentException("사용자 이름은 최소 2자 이상, 8자 이하이며 한글(가~힣)로 구성되어야 합니다.")
         if (!ValidationUtil.isValidPassword(request.password)) throw IllegalArgumentException("비밀번호는 최소 8자 이상, 15자 이하이며 알파벳 대소문자(a~z, A~Z), 숫자(0~9), 특수문자로 구성되어야 합니다.")
 
         val user = UserEntity(
@@ -80,6 +80,7 @@ class UserServiceImpl(
            }
            else -> throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
        }
+
 //       // 이렇게 하면 requestparam으로 플랫폼 정보를 받지 않아도 됨.
 //      // 하지만 userId가 각 테이블에서 관리되어 중복될 경우 어떻게 처리해야될 지 모르겠음
 //       val tokenUserId = userPrincipal.id

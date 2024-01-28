@@ -6,6 +6,7 @@ import com.teamsparta.spartabackoffice.domain.homework.service.HomeworkService
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
@@ -18,6 +19,7 @@ class HomeworkController (
 ){
 
     @PostMapping("/upload")
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('TUTOR')")
     fun submitHomework(
         @RequestPart("file") file: MultipartFile,
         @RequestPart("submitRequest") submitRequest: SubmitRequest,

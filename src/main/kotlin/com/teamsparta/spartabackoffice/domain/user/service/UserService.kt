@@ -6,7 +6,6 @@ import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdatePasswordReq
 import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdateUserRequest
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UpdateUserResponse
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
-import com.teamsparta.spartabackoffice.domain.user.model.Platform
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 
 interface UserService {

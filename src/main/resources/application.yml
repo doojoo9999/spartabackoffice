@@ -8,11 +8,6 @@ spring:
         use_sql_comments: true
         default_batch_fetch_size: 500
 
-  datasource:
-    url: jdbc:postgresql://aws-0-ap-northeast-2.pooler.supabase.com:6543/postgres
-    username: postgres.ufkrrzcfwlvxdonidpfz
-    password: 6QPOudb5YT5lm732
-
   servlet:
     multipart:
       enabled : true

@@ -1,6 +1,5 @@
 package com.teamsparta.spartabackoffice.infra.security
 
-import com.teamsparta.spartabackoffice.domain.user.model.Platform
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 
