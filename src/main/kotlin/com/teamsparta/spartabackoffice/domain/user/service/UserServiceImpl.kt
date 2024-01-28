@@ -38,7 +38,7 @@ class UserServiceImpl(
             email = request.email,
             password = passwordEncoder.encode(request.password),
             name = request.name,
-            role = UserRole.ROLE_student
+            role = UserRole.STUDENT
         )
         userRepository.save(user)
         return user.toResponse()

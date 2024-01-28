@@ -1,13 +1,11 @@
 package com.teamsparta.spartabackoffice.domain.post.controller
 
 import com.teamsparta.spartabackoffice.domain.post.dto.request.CreatePostRequest
-import com.teamsparta.spartabackoffice.domain.post.dto.request.DeletePostRequest
 import com.teamsparta.spartabackoffice.domain.post.dto.request.UpdatePostRequest
+import com.teamsparta.spartabackoffice.domain.post.dto.response.NotCompletedPostResponse
 import com.teamsparta.spartabackoffice.domain.post.dto.response.PostResponse
-import com.teamsparta.spartabackoffice.domain.post.repository.PostRepository
 import com.teamsparta.spartabackoffice.domain.post.service.PostService
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
-import org.apache.coyote.Response
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.*
 @RestController
 class PostController(
     private val postService: PostService,
-    private val postRepository: PostRepository
 ) {
 
     @PostMapping()
@@ -60,6 +57,13 @@ class PostController(
             .build()
     }
 
-
+    @GetMapping("/completed")
+    fun getNotCompletedPostList(
+        @AuthenticationPrincipal userPrincipal: UserPrincipal
+    ) : ResponseEntity<List<NotCompletedPostResponse>> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(postService.getNotCompletedPostList(userPrincipal))
+    }
 
 }

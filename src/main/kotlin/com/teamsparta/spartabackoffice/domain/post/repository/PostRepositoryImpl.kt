@@ -1,13 +1,13 @@
-package com.teamsparta.spartabackoffice.domain.backoffice.repository
+package com.teamsparta.spartabackoffice.domain.post.repository
 
-import com.teamsparta.spartabackoffice.domain.comment.model.QCommentEntity
-import com.teamsparta.spartabackoffice.domain.homework.model.QHomeworkEntity
 import com.teamsparta.spartabackoffice.domain.post.model.Complete
 import com.teamsparta.spartabackoffice.domain.post.model.PostEntity
 import com.teamsparta.spartabackoffice.domain.post.model.QPostEntity
 import com.teamsparta.spartabackoffice.infra.querydsl.QueryDslSupport
+import org.springframework.stereotype.Repository
 
-class BackOfficeRepositoryImpl : QueryDslSupport(), CustomBackOfficeRepository {
+@Repository
+class PostRepositoryImpl : QueryDslSupport(), CustomPostRepository {
 
     private val post = QPostEntity.postEntity
     override fun getNotCompletedPostList(): List<PostEntity> {

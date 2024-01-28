@@ -1,7 +1,9 @@
 package com.teamsparta.spartabackoffice.domain.post.service
 
+import com.teamsparta.spartabackoffice.domain.exception.ModelNotFoundException
 import com.teamsparta.spartabackoffice.domain.post.dto.request.CreatePostRequest
 import com.teamsparta.spartabackoffice.domain.post.dto.request.UpdatePostRequest
+import com.teamsparta.spartabackoffice.domain.post.dto.response.NotCompletedPostResponse
 import com.teamsparta.spartabackoffice.domain.post.dto.response.PostResponse
 import com.teamsparta.spartabackoffice.domain.post.model.Complete
 import com.teamsparta.spartabackoffice.domain.post.model.PostEntity
@@ -68,11 +70,26 @@ class PostServiceImpl (
         val post = postRepository.findByIdOrNull(postId) ?: throw IllegalStateException ("Post Not Found")
 
 
-        if (post.user.id == userId || user.role == UserRole.ROLE_admin) {
+        if (post.user.id == userId || user.role == UserRole.ADMIN) {
             postRepository.delete(post)
         } else {
             throw AccessDeniedException ("본인의 게시글만 삭제할 수 있습니다.")
         }
 
     }
+
+
+    override fun getNotCompletedPostList(userPrincipal: UserPrincipal): List<NotCompletedPostResponse> {
+        val userId = userPrincipal.id
+        val user = userRepository.findByIdOrNull(userId) ?: throw ModelNotFoundException ("User Id", userId)
+
+        val notCompletedPosts = postRepository.getNotCompletedPostList()
+        val response = notCompletedPosts.map { post ->
+            NotCompletedPostResponse(post.user.id, post.id, post.title, post.complete)
+        }
+
+        return response
+
+    }
+
 }

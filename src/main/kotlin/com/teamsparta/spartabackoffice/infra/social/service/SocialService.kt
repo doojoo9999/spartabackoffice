@@ -19,7 +19,7 @@ class SocialService(
     @Transactional
     fun socialLogin(oAuth2User: OAuth2User) : JwtDto {
         val email = oAuth2User.attributes["email"] as String
-        val role = UserRole.ROLE_student
+        val role = UserRole.STUDENT
         if(!userRepository.existsByEmail(oAuth2User.attributes["email"] as String)) {
             val user = UserEntity(
                 email = email,
