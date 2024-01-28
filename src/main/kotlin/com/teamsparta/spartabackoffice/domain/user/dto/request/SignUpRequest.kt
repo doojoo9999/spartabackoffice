@@ -9,5 +9,5 @@ data class SignUpRequest (
     var email: String,
     var password: String,
     var name: String,
-    var role: UserRole
+    var role: UserRole?
 )

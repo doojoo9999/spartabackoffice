@@ -1,5 +1,6 @@
 package com.teamsparta.spartabackoffice.domain.user.service
 
+import com.teamsparta.spartabackoffice.domain.exception.EmailNotFoundException
 import com.teamsparta.spartabackoffice.domain.exception.ModelNotFoundException
 import com.teamsparta.spartabackoffice.domain.user.dto.request.LoginRequest
 import com.teamsparta.spartabackoffice.domain.user.dto.request.SignUpRequest
@@ -17,7 +18,6 @@ import com.teamsparta.spartabackoffice.infra.util.ValidationUtil
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -56,18 +56,12 @@ class UserServiceImpl(
 
     override fun getUser(userId: Long): UserResponse {
         val authentication = SecurityContextHolder.getContext().authentication
-        val id = when (val principal = authentication.principal) {
-            is UserPrincipal -> principal.id
-            is OAuth2User -> (principal.attributes["sub"] as String).toLong()
-            else -> throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
-        }
+        if(authentication.principal !is UserPrincipal)
+            throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
 
-        if (id != userId) {
-            throw IllegalArgumentException("요청한 사용자 ID와 토큰의 사용자 ID가 일치하지 않습니다.")
-        }
-        val user = userRepository.findById(id).orElseThrow {
-            IllegalArgumentException("해당 유저를 찾을 수 없습니다.")
-        }
+        val email = (authentication.principal as UserPrincipal).email
+        val user = userRepository.findById(userId)
+            .orElseThrow { EmailNotFoundException(email) }
         return user.toResponse()
     }
 

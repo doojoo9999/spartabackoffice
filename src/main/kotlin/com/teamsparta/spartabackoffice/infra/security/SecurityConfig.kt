@@ -2,13 +2,9 @@ package com.teamsparta.spartabackoffice.infra.security
 
 import com.teamsparta.spartabackoffice.infra.security.jwt.CustomAccessDeniedHandler
 import com.teamsparta.spartabackoffice.infra.security.jwt.JwtAuthenticationFilter
-import com.teamsparta.spartabackoffice.infra.security.jwt.SocialLoginFilter
 import com.teamsparta.spartabackoffice.infra.social.service.CustomUserDetailService
-import com.teamsparta.spartabackoffice.infra.social.service.SocialService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -22,26 +18,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 class SecurityConfig(
     private val jwtAuthenticationFilter: JwtAuthenticationFilter,
-
     private val authenticationEntryPoint: AuthenticationEntryPoint,
     private val accessDeniedHandler: CustomAccessDeniedHandler,
     private val customUserDetailService: CustomUserDetailService //소셜로그인
 ) {
-    @Bean
-    @Throws(Exception::class)
-    fun authenticationManager(authenticationConfiguration: AuthenticationConfiguration): AuthenticationManager {
-        return authenticationConfiguration.authenticationManager
-    }
-    @Bean
-    fun socialLoginFilter(authenticationManager: AuthenticationManager, socialService: SocialService): SocialLoginFilter {
-        return SocialLoginFilter(authenticationManager, socialService)
-    }
 
     @Bean
-    fun filterChain(
-        http: HttpSecurity,
-        socialLoginFilter: SocialLoginFilter
-    ): SecurityFilterChain {
+    fun filterChain(http: HttpSecurity): SecurityFilterChain {
         return http
             .httpBasic { it.disable() }
             .formLogin { it.disable() }
@@ -59,19 +42,17 @@ class SecurityConfig(
                     "/v3/api-docs/**",
                     "/api/**"
                 ).permitAll()
-                    .requestMatchers("/api/**").authenticated()
+                    .requestMatchers("/api/v1/**").authenticated()
                     //위 URI를 제외하고는 모두 인증과정을 거치겠음.
 //                    .anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
-            .addFilterBefore(socialLoginFilter, JwtAuthenticationFilter::class.java)
             .exceptionHandling {
                 it.authenticationEntryPoint(authenticationEntryPoint)
                 it.accessDeniedHandler(accessDeniedHandler)
             }
             .build()
     }
-
 
 
 
