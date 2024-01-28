@@ -1,7 +1,9 @@
 package com.teamsparta.spartabackoffice.domain.user.service
 
+import com.teamsparta.spartabackoffice.domain.comment.repository.CommentRepository
 import com.teamsparta.spartabackoffice.domain.exception.EmailNotFoundException
 import com.teamsparta.spartabackoffice.domain.exception.ModelNotFoundException
+import com.teamsparta.spartabackoffice.domain.post.repository.PostRepository
 import com.teamsparta.spartabackoffice.domain.user.dto.request.LoginRequest
 import com.teamsparta.spartabackoffice.domain.user.dto.request.SignUpRequest
 import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdatePasswordRequest
@@ -26,7 +28,9 @@ import org.springframework.transaction.annotation.Transactional
 class UserServiceImpl(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val jwtPlugin: JwtPlugin
+    private val jwtPlugin: JwtPlugin,
+    private val postRepository : PostRepository,
+    private val commentRepository: CommentRepository,
 ) : UserService {
     override fun signUp(request: SignUpRequest): UserResponse {
         userRepository.findByEmail(request.email)?.let {
@@ -96,6 +100,7 @@ class UserServiceImpl(
         userRepository.findById(userId).orElseThrow {
             IllegalArgumentException("해당 유저를 찾을 수 없습니다.")
         }.also {
+
             userRepository.delete(it)
         }
     }

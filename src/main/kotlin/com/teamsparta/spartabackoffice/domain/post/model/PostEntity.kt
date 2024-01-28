@@ -23,7 +23,7 @@ class PostEntity (
     var complete : Complete,
 
     @JoinColumn (name = "userId")
-    @ManyToOne
+    @ManyToOne (cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var user : UserEntity
 
 ){

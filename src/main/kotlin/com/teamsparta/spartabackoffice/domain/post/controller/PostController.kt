@@ -4,6 +4,7 @@ import com.teamsparta.spartabackoffice.domain.post.dto.request.CreatePostRequest
 import com.teamsparta.spartabackoffice.domain.post.dto.request.UpdatePostRequest
 import com.teamsparta.spartabackoffice.domain.post.dto.response.NotCompletedPostResponse
 import com.teamsparta.spartabackoffice.domain.post.dto.response.PostResponse
+import com.teamsparta.spartabackoffice.domain.post.model.Complete
 import com.teamsparta.spartabackoffice.domain.post.service.PostService
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import org.springframework.http.HttpStatus
@@ -38,11 +39,12 @@ class PostController(
     fun updatePostList(
         @PathVariable postId: Long,
         @RequestBody updatePostRequest: UpdatePostRequest,
+        @RequestBody complete: Complete,
         @AuthenticationPrincipal userPrincipal : UserPrincipal
     ):ResponseEntity<PostResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(postService.updatePost(updatePostRequest, userPrincipal))
+            .body(postService.updatePost(updatePostRequest, complete, userPrincipal))
     }
     @DeleteMapping("/{postId}")
     fun deletePost(
@@ -65,5 +67,6 @@ class PostController(
             .status(HttpStatus.OK)
             .body(postService.getNotCompletedPostList(userPrincipal))
     }
+
 
 }

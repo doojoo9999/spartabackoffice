@@ -11,7 +11,7 @@ import jakarta.persistence.*
 @Table(name = "homeworks")
 class HomeworkEntity(
     @JoinColumn (name = "userId", nullable = false)
-    @ManyToOne
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val user: UserEntity,
 
     @Column (name = "title", nullable = false)
