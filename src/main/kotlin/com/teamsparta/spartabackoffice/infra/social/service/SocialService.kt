@@ -22,7 +22,8 @@ class SocialService(
 
     @Transactional
     fun socialLogin(oAuth2User: OAuth2User) : JwtDto {
-        val email = oAuth2User.attributes["email"] as String
+        val email = oAuth2User.attributes.get("email").toString()
+
         val platform = Platform.GOOGLE
         val member = if(!socialRepository.existsByEmail(email)) {
             val newMember = SocialEntity(

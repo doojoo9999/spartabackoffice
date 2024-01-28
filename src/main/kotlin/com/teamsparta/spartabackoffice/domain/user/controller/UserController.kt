@@ -6,9 +6,9 @@ import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdatePasswordReq
 import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdateUserRequest
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UpdateUserResponse
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
+import com.teamsparta.spartabackoffice.domain.user.model.Platform
 import com.teamsparta.spartabackoffice.domain.user.service.UserService
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
-import com.teamsparta.spartabackoffice.infra.social.dto.SocialResponse
 import com.teamsparta.spartabackoffice.infra.social.jwt.JwtDto
 import com.teamsparta.spartabackoffice.infra.social.service.SocialService
 import org.springframework.http.HttpHeaders
@@ -46,7 +46,7 @@ class UserController(
     }
 
     @GetMapping("/users/{userId}")
-    fun getUser(@PathVariable userId: Long, @RequestParam platform: String): ResponseEntity<Any> {
+    fun getUser(@PathVariable userId: Long, @RequestParam platform: Platform): ResponseEntity<Any> {
         val response = userService.getUser(userId, platform)
         return ResponseEntity.ok(response)
     }

@@ -21,7 +21,7 @@ class SocialEntity(
     var platform: Platform
 
 ) {
-    fun SocialEntity.toSocialResponse(): SocialResponse {
+    fun toResponse(): SocialResponse {
         return SocialResponse(
             id = id,
             email = email,

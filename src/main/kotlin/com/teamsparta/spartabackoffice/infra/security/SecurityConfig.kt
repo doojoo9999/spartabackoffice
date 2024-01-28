@@ -42,7 +42,8 @@ class SecurityConfig(
 //                    TODO("수정 필요")
                     "/swagger-ui/**",
                     "/v3/api-docs/**",
-                    "/api/**"
+                    "/api/**",
+                    "/api/v1/login"
                 ).permitAll()
                     .requestMatchers("/api/v1/**").authenticated()
                     //위 URI를 제외하고는 모두 인증과정을 거치겠음.

@@ -17,9 +17,11 @@ import com.teamsparta.spartabackoffice.domain.user.model.toResponse
 import com.teamsparta.spartabackoffice.domain.user.repository.UserRepository
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import com.teamsparta.spartabackoffice.infra.security.jwt.JwtPlugin
+import com.teamsparta.spartabackoffice.infra.social.model.SocialEntity
 import com.teamsparta.spartabackoffice.infra.social.repository.SocialRepository
 import com.teamsparta.spartabackoffice.infra.util.ValidationUtil
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.security.core.context.SecurityContext
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -62,10 +64,12 @@ class UserServiceImpl(
         return Pair(user.toResponse(), token)
     }
 
-   override fun getUser(id: Long, platform: String): Any {
+   override fun getUser(id: Long, platform: Platform): Any {
         val authentication = SecurityContextHolder.getContext().authentication
         if(authentication.principal !is UserPrincipal)
             throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
+
+       
 
         val userPrincipal = authentication.principal as UserPrincipal
         val email = userPrincipal.email
@@ -74,12 +78,12 @@ class UserServiceImpl(
            throw IllegalArgumentException("플랫폼 정보가 일치하지 않습니다.")
        }
         return when(platform) {
-            "GOOGLE" -> {
+            Platform.GOOGLE -> {
                 val socialUser = socialRepository.findById(id)
                     .orElseThrow { EmailNotFoundException(email) }
                 socialUser.toResponse()
             }
-            "SPARTA" -> {
+            Platform.SPARTA -> {
                 val user = userRepository.findById(id)
                     .orElseThrow { EmailNotFoundException(email) }
                 user.toResponse()
