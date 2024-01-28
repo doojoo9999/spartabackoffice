@@ -28,11 +28,11 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class UserServiceImpl(
     private val userRepository: UserRepository,
+    private val socialRepository: SocialRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtPlugin: JwtPlugin,
     private val postRepository : PostRepository,
     private val commentRepository: CommentRepository,
-    private val socialRepository: SocialRepository
 ) : UserService {
     override fun signUp(request: SignUpRequest): UserResponse {
         userRepository.findByEmail(request.email)?.let {
@@ -62,47 +62,53 @@ class UserServiceImpl(
         return Pair(user.toResponse(), token)
     }
 
-    override fun getUser(userId: Long, userPrincipal: UserPrincipal): Any {
+   override fun getUser(id: Long, platform: String): Any {
+        val authentication = SecurityContextHolder.getContext().authentication
+        if(authentication.principal !is UserPrincipal)
+            throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
 
+        val userPrincipal = authentication.principal as UserPrincipal
+        val email = userPrincipal.email
 
-        // 이렇게 하면 requestparam으로 플랫폼 정보를 받지 않아도 됨.
-        // 하지만 userId가 각 테이블에서 관리되어 중복될 경우 어떻게 처리해야될 지 모르겠음
-        val tokenUserId = userPrincipal.id
-
-        val tokenUserPlatform = userPrincipal.platform
-
-        when (tokenUserPlatform) {
-            Platform.SPARTA -> {
-                val checkUserId = userRepository.findByIdOrNull(tokenUserId)
-                    ?: throw ModelNotFoundException("UserId", tokenUserId)
-
-                return checkUserId.toResponse()
+       if (userPrincipal.platform != platform) {
+           throw IllegalArgumentException("플랫폼 정보가 일치하지 않습니다.")
+       }
+        return when(platform) {
+            "GOOGLE" -> {
+                val socialUser = socialRepository.findById(id)
+                    .orElseThrow { EmailNotFoundException(email) }
+                socialUser.toResponse()
             }
-
-            Platform.GOOGLE -> {
-                val checkUserId2 = socialRepository.findByIdOrNull(tokenUserId)
-                    ?: throw ModelNotFoundException("UserId", tokenUserId)
-
-                return UserEntity(
-                    email = checkUserId2.email,
-                    name = checkUserId2.id.toString(),
-                    role = checkUserId2.role,
-                    platform = checkUserId2.platform,
-                    password = "social login"
-                )
+            "SPARTA" -> {
+                val user = userRepository.findById(id)
+                    .orElseThrow { EmailNotFoundException(email) }
+                user.toResponse()
             }
-
-            else -> throw IllegalStateException("플랫폼 정보가 확인되지 않았습니다.")
+            else -> throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
         }
-
-//        val authentication = SecurityContextHolder.getContext().authentication
-//        if(authentication.principal !is UserPrincipal)
-//            throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
+//       // 이렇게 하면 requestparam으로 플랫폼 정보를 받지 않아도 됨.
+//      // 하지만 userId가 각 테이블에서 관리되어 중복될 경우 어떻게 처리해야될 지 모르겠음
+//       val tokenUserId = userPrincipal.id
 //
-//        val email = (authentication.principal as UserPrincipal).email
-//        val user = userRepository.findById(userId)
-//            .orElseThrow { EmailNotFoundException(email) }
-//        return user.toResponse()
+//       val tokenUserPlatform = userPrincipal.platform
+//
+//       when (tokenUserPlatform) {
+//           Platform.SPARTA -> {
+//               val checkUserId = userRepository.findByIdOrNull(tokenUserId)
+//                   ?: throw ModelNotFoundException("UserId", tokenUserId)
+//
+//               return checkUserId.toResponse()
+//           }
+//
+//           Platform.GOOGLE -> {
+//               val checkUserId = socialRepository.findByIdOrNull(tokenUserId)
+//                   ?: throw ModelNotFoundException("UserId", tokenUserId)
+//
+//               return checkUserId.toResponse()
+//           }
+//
+//           else -> throw IllegalStateException("플랫폼 정보가 확인되지 않았습니다.")
+//       }
     }
 
 
