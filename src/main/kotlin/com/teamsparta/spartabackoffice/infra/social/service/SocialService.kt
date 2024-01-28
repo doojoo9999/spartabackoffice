@@ -27,7 +27,7 @@ class SocialService(
         val member = if(!socialRepository.existsByEmail(email)) {
             val newMember = SocialEntity(
                 email = email,
-                role = UserRole.ROLE_student,
+                role = UserRole.STUDENT,
                 platform = platform
             )
             socialRepository.save(newMember)
