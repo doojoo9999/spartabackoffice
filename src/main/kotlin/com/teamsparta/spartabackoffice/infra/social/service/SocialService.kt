@@ -40,4 +40,5 @@ class SocialService(
         return jwtProvider.generateJwtDto(oAuth2User, member.id.toString(), member.role.name, platform.name)
     }
 
+
 }

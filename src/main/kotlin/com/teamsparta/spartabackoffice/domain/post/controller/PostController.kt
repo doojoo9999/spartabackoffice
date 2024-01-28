@@ -9,6 +9,7 @@ import com.teamsparta.spartabackoffice.domain.post.service.PostService
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
@@ -19,6 +20,7 @@ class PostController(
 ) {
 
     @PostMapping()
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('TUTOR')")
     fun createPost(
         @RequestBody createPostRequest: CreatePostRequest,
         @AuthenticationPrincipal userPrincipal : UserPrincipal
@@ -29,6 +31,7 @@ class PostController(
     }
 
     @GetMapping()
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('TUTOR')")
     fun getPostList() : ResponseEntity<List<PostResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
@@ -36,6 +39,7 @@ class PostController(
     }
 
     @PutMapping("/{postId}")
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('TUTOR')")
     fun updatePostList(
         @PathVariable postId: Long,
         @RequestBody updatePostRequest: UpdatePostRequest,
@@ -47,6 +51,7 @@ class PostController(
             .body(postService.updatePost(updatePostRequest, complete, userPrincipal))
     }
     @DeleteMapping("/{postId}")
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('TUTOR')")
     fun deletePost(
         @PathVariable postId:Long,
         @AuthenticationPrincipal userPrincipal : UserPrincipal
@@ -60,6 +65,7 @@ class PostController(
     }
 
     @GetMapping("/completed")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('TUTOR')")
     fun getNotCompletedPostList(
         @AuthenticationPrincipal userPrincipal: UserPrincipal
     ) : ResponseEntity<List<NotCompletedPostResponse>> {

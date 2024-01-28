@@ -14,6 +14,7 @@ import com.teamsparta.spartabackoffice.infra.social.service.SocialService
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.web.bind.annotation.*
@@ -46,12 +47,14 @@ class UserController(
     }
 
     @GetMapping("/users/{userId}")
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('TUTOR')")
     fun getUser(@PathVariable userId: Long, @RequestParam platform: Platform): ResponseEntity<Any> {
         val response = userService.getUser(userId, platform)
         return ResponseEntity.ok(response)
     }
 
     @PutMapping("/users/{userId}")
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('TUTOR')")
     fun updateUser(
         @PathVariable userId: Long,
         @RequestBody request:UpdateUserRequest
@@ -63,12 +66,14 @@ class UserController(
     }
 
     @DeleteMapping("/users/withdraw/{userId}")
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('TUTOR')")
     fun deleteUser(@PathVariable userId: Long): ResponseEntity<Void> {
         userService.deleteUser(userId)
         return ResponseEntity.noContent().build()
     }
 
     @PutMapping("/password")
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('TUTOR')")
     fun updatePassword(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
         @RequestBody request: UpdatePasswordRequest

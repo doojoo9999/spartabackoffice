@@ -7,6 +7,7 @@ import com.teamsparta.spartabackoffice.domain.comment.service.CommentService
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
@@ -16,6 +17,7 @@ class CommentController(
     private val commentService : CommentService
 ) {
     @PostMapping()
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('TUTOR')")
     fun createComment(
         @PathVariable postId: Long,
         @RequestBody createCommentRequest : CreateCommentRequest,
@@ -27,6 +29,7 @@ class CommentController(
     }
 
     @PutMapping("/{commentId}")
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('TUTOR')")
     fun updateComment(
         @PathVariable postId: Long,
         @PathVariable commentId: Long,
@@ -40,6 +43,7 @@ class CommentController(
 
     }
     @DeleteMapping("/{commentId}")
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('TUTOR')")
     fun deleteComment(
         @PathVariable postId: Long,
         @PathVariable commentId: Long,
@@ -53,6 +57,7 @@ class CommentController(
             .build()
     }
     @GetMapping( )
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('TUTOR')")
     fun getCommentList() : ResponseEntity<List<CommentResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
