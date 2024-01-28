@@ -86,6 +86,29 @@ class UserServiceImpl(
             }
             else -> throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
         }
+//       // 이렇게 하면 requestparam으로 플랫폼 정보를 받지 않아도 됨.
+//      // 하지만 userId가 각 테이블에서 관리되어 중복될 경우 어떻게 처리해야될 지 모르겠음
+//       val tokenUserId = userPrincipal.id
+//
+//       val tokenUserPlatform = userPrincipal.platform
+//
+//       when (tokenUserPlatform) {
+//           Platform.SPARTA -> {
+//               val checkUserId = userRepository.findByIdOrNull(tokenUserId)
+//                   ?: throw ModelNotFoundException("UserId", tokenUserId)
+//
+//               return checkUserId.toResponse()
+//           }
+//
+//           Platform.GOOGLE -> {
+//               val checkUserId = socialRepository.findByIdOrNull(tokenUserId)
+//                   ?: throw ModelNotFoundException("UserId", tokenUserId)
+//
+//               return checkUserId.toResponse()
+//           }
+//
+//           else -> throw IllegalStateException("플랫폼 정보가 확인되지 않았습니다.")
+//       }
     }
 
 
