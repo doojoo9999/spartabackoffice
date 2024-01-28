@@ -43,13 +43,13 @@ class PostServiceImpl (
         return postRepository.findAll().map {it.toResponse()}
     }
 
-    override fun updatePost(request: UpdatePostRequest, userPrincipal : UserPrincipal): PostResponse {
+    override fun updatePost(request: UpdatePostRequest, complete: Complete, userPrincipal : UserPrincipal): PostResponse {
         val userId = userPrincipal.id
 
         val user = userRepository.findByIdOrNull(userId) ?: throw IllegalStateException ("User Not Found")
         val post = postRepository.findByIdOrNull(request.postId) ?: throw IllegalStateException ("Post Not Found")
 
-        val (id, title, content, private, complete) = request
+        val (id, title, content, private) = request
 
         post.user = user
         post.id = id

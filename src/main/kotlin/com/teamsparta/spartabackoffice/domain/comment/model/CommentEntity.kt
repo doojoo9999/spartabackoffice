@@ -11,11 +11,11 @@ class CommentEntity(
     @Column(name = "content")
     var content: String,
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     var post: PostEntity,
 
-    @ManyToOne
+    @ManyToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     var user : UserEntity
 ) {
