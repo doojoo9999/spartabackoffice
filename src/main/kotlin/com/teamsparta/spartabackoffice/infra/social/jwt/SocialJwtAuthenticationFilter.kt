@@ -1,5 +1,6 @@
 package com.teamsparta.spartabackoffice.infra.social.jwt
 
+import com.teamsparta.spartabackoffice.domain.user.model.Platform
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import com.teamsparta.spartabackoffice.infra.security.jwt.JwtAuthenticationToken
 import jakarta.servlet.FilterChain
@@ -32,7 +33,7 @@ class SocialJwtAuthenticationFilter (
                     val userId = it.payload.subject.toLong()
                     val role = it.payload["role"] as String
                     val email = it.payload["email"] as String
-                    val platform = it.payload["platform"] as String
+                    val platform = it.payload["platform"] as Platform
                     val principal = UserPrincipal(
                         id = userId,
                         email = email,

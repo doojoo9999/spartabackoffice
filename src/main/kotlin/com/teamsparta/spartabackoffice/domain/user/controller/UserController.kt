@@ -40,16 +40,21 @@ class UserController(
     }
 
     @GetMapping("/users/{userId}")
-    fun getUser(@PathVariable userId: Long): ResponseEntity<UserResponse> {
-        val response = userService.getUser(userId)
-        return ResponseEntity.ok(response)
+    fun getUser(
+        @PathVariable userId: Long,
+        @AuthenticationPrincipal userPrincipal: UserPrincipal
+    ): Any {
+//        val response = userService.getUser(userId)
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(userService.getUser(userId, userPrincipal))
     }
 
-    @GetMapping("/socials/{socialId}")
-    fun getSocialUser(@PathVariable socialId: Long): ResponseEntity<SocialResponse> {
-        val response = socialService.getSocialUser(socialId)
-        return ResponseEntity.ok(response)
-    }
+//    @GetMapping("/socials/{socialId}")
+//    fun getSocialUser(@PathVariable socialId: Long): ResponseEntity<SocialResponse> {
+//        val response = socialService.getSocialUser(socialId)
+//        return ResponseEntity.ok(response)
+//    }
 
     @PutMapping("/users/{userId}")
     fun updateUser(

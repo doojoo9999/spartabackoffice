@@ -39,15 +39,15 @@ class SocialService(
         return jwtProvider.generateJwtDto(oAuth2User, member.id.toString(), member.role.name, platform.name)
     }
 
-    fun getSocialUser(socialId: Long): SocialResponse {
-        val authentication = SecurityContextHolder.getContext().authentication
-        if(authentication.principal !is UserPrincipal)
-            throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
-
-        val userPrincipal = authentication.principal as UserPrincipal
-        val email = userPrincipal.email
-        val socialUser = socialRepository.findById(socialId)
-            .orElseThrow { EmailNotFoundException(email) }
-        return socialUser.toResponse()
-    }
+//    fun getSocialUser(socialId: Long): SocialResponse {
+//        val authentication = SecurityContextHolder.getContext().authentication
+//        if(authentication.principal !is UserPrincipal)
+//            throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
+//
+//        val userPrincipal = authentication.principal as UserPrincipal
+//        val email = userPrincipal.email
+//        val socialUser = socialRepository.findById(socialId)
+//            .orElseThrow { EmailNotFoundException(email) }
+//        return socialUser.toSocialResponse()
+//    }
 }

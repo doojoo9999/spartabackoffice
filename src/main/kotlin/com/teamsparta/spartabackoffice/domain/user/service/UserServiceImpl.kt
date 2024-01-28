@@ -17,6 +17,7 @@ import com.teamsparta.spartabackoffice.domain.user.model.toResponse
 import com.teamsparta.spartabackoffice.domain.user.repository.UserRepository
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import com.teamsparta.spartabackoffice.infra.security.jwt.JwtPlugin
+import com.teamsparta.spartabackoffice.infra.social.repository.SocialRepository
 import com.teamsparta.spartabackoffice.infra.util.ValidationUtil
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.context.SecurityContextHolder
@@ -31,6 +32,7 @@ class UserServiceImpl(
     private val jwtPlugin: JwtPlugin,
     private val postRepository : PostRepository,
     private val commentRepository: CommentRepository,
+    private val socialRepository: SocialRepository
 ) : UserService {
     override fun signUp(request: SignUpRequest): UserResponse {
         userRepository.findByEmail(request.email)?.let {
@@ -60,15 +62,47 @@ class UserServiceImpl(
         return Pair(user.toResponse(), token)
     }
 
-    override fun getUser(userId: Long): UserResponse {
-        val authentication = SecurityContextHolder.getContext().authentication
-        if(authentication.principal !is UserPrincipal)
-            throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
+    override fun getUser(userId: Long, userPrincipal: UserPrincipal): Any {
 
-        val email = (authentication.principal as UserPrincipal).email
-        val user = userRepository.findById(userId)
-            .orElseThrow { EmailNotFoundException(email) }
-        return user.toResponse()
+
+        // 이렇게 하면 requestparam으로 플랫폼 정보를 받지 않아도 됨.
+        // 하지만 userId가 각 테이블에서 관리되어 중복될 경우 어떻게 처리해야될 지 모르겠음
+        val tokenUserId = userPrincipal.id
+
+        val tokenUserPlatform = userPrincipal.platform
+
+        when (tokenUserPlatform) {
+            Platform.SPARTA -> {
+                val checkUserId = userRepository.findByIdOrNull(tokenUserId)
+                    ?: throw ModelNotFoundException("UserId", tokenUserId)
+
+                return checkUserId.toResponse()
+            }
+
+            Platform.GOOGLE -> {
+                val checkUserId2 = socialRepository.findByIdOrNull(tokenUserId)
+                    ?: throw ModelNotFoundException("UserId", tokenUserId)
+
+                return UserEntity(
+                    email = checkUserId2.email,
+                    name = checkUserId2.id.toString(),
+                    role = checkUserId2.role,
+                    platform = checkUserId2.platform,
+                    password = "social login"
+                )
+            }
+
+            else -> throw IllegalStateException("플랫폼 정보가 확인되지 않았습니다.")
+        }
+
+//        val authentication = SecurityContextHolder.getContext().authentication
+//        if(authentication.principal !is UserPrincipal)
+//            throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
+//
+//        val email = (authentication.principal as UserPrincipal).email
+//        val user = userRepository.findById(userId)
+//            .orElseThrow { EmailNotFoundException(email) }
+//        return user.toResponse()
     }
 
 
