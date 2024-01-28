@@ -11,7 +11,7 @@ import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 interface UserService {
     fun signUp(request: SignUpRequest): UserResponse
     fun login(request: LoginRequest): Pair<UserResponse, String>
-    fun getUser(userId: Long): UserResponse
+    fun getUser(id: Long, platform: String): Any
     fun updateUser(userId: Long, request: UpdateUserRequest) : UpdateUserResponse
     fun deleteUser(userId: Long)
 

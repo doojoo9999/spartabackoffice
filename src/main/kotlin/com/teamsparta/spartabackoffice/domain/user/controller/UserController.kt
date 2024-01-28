@@ -38,16 +38,16 @@ class UserController(
             .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
             .body(userResponse)
     }
-
-    @GetMapping("/users/{userId}")
-    fun getUser(@PathVariable userId: Long): ResponseEntity<UserResponse> {
-        val response = userService.getUser(userId)
-        return ResponseEntity.ok(response)
+    //소셜로그인
+    @GetMapping("/login")
+    fun socialLogin(@AuthenticationPrincipal oAuth2User: OAuth2User): ResponseEntity<JwtDto> {
+        //이거 추가됨!!!
+        return ResponseEntity.ok(socialService.socialLogin(oAuth2User))
     }
 
-    @GetMapping("/socials/{socialId}")
-    fun getSocialUser(@PathVariable socialId: Long): ResponseEntity<SocialResponse> {
-        val response = socialService.getSocialUser(socialId)
+    @GetMapping("/users/{userId}")
+    fun getUser(@PathVariable userId: Long, @RequestParam platform: String): ResponseEntity<Any> {
+        val response = userService.getUser(userId, platform)
         return ResponseEntity.ok(response)
     }
 
@@ -66,13 +66,6 @@ class UserController(
     fun deleteUser(@PathVariable userId: Long): ResponseEntity<Void> {
         userService.deleteUser(userId)
         return ResponseEntity.noContent().build()
-    }
-
-    //소셜로그인
-    @GetMapping("/login")
-    fun socialLogin(@AuthenticationPrincipal oAuth2User: OAuth2User): ResponseEntity<JwtDto> {
-        //이거 추가됨!!!
-        return ResponseEntity.ok(socialService.socialLogin(oAuth2User))
     }
 
     @PutMapping("/password")

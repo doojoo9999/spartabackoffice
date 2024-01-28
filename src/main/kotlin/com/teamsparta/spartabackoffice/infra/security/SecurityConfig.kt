@@ -31,7 +31,7 @@ class SecurityConfig(
             .httpBasic { it.disable() }
             .formLogin { it.disable() }
             .csrf { it.disable() }
-            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.NEVER) }
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .oauth2Login {
                 it.userInfoEndpoint { u -> u.userService(customUserDetailService) }
                 it.defaultSuccessUrl("/api/v1/login")

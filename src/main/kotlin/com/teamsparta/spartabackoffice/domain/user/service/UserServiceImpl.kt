@@ -15,6 +15,7 @@ import com.teamsparta.spartabackoffice.domain.user.model.toResponse
 import com.teamsparta.spartabackoffice.domain.user.repository.UserRepository
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import com.teamsparta.spartabackoffice.infra.security.jwt.JwtPlugin
+import com.teamsparta.spartabackoffice.infra.social.repository.SocialRepository
 import com.teamsparta.spartabackoffice.infra.util.ValidationUtil
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.core.context.SecurityContextHolder
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class UserServiceImpl(
     private val userRepository: UserRepository,
+    private val socialRepository: SocialRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtPlugin: JwtPlugin
 ) : UserService {
@@ -56,15 +58,30 @@ class UserServiceImpl(
         return Pair(user.toResponse(), token)
     }
 
-    override fun getUser(userId: Long): UserResponse {
+   override fun getUser(id: Long, platform: String): Any {
         val authentication = SecurityContextHolder.getContext().authentication
         if(authentication.principal !is UserPrincipal)
             throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
 
-        val email = (authentication.principal as UserPrincipal).email
-        val user = userRepository.findById(userId)
-            .orElseThrow { EmailNotFoundException(email) }
-        return user.toResponse()
+        val userPrincipal = authentication.principal as UserPrincipal
+        val email = userPrincipal.email
+
+       if (userPrincipal.platform != platform) {
+           throw IllegalArgumentException("플랫폼 정보가 일치하지 않습니다.")
+       }
+        return when(platform) {
+            "GOOGLE" -> {
+                val socialUser = socialRepository.findById(id)
+                    .orElseThrow { EmailNotFoundException(email) }
+                socialUser.toResponse()
+            }
+            "SPARTA" -> {
+                val user = userRepository.findById(id)
+                    .orElseThrow { EmailNotFoundException(email) }
+                user.toResponse()
+            }
+            else -> throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
+        }
     }
 
 
