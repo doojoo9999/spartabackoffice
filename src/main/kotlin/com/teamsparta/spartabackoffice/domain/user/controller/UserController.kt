@@ -7,16 +7,15 @@ import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdateUserRequest
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UpdateUserResponse
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
 import com.teamsparta.spartabackoffice.domain.user.service.UserService
+import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
+import com.teamsparta.spartabackoffice.infra.social.dto.SocialResponse
 import com.teamsparta.spartabackoffice.infra.social.jwt.JwtDto
 import com.teamsparta.spartabackoffice.infra.social.service.SocialService
-import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-
 import org.springframework.security.oauth2.core.user.OAuth2User
-
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -42,8 +41,14 @@ class UserController(
 
     @GetMapping("/users/{userId}")
     fun getUser(@PathVariable userId: Long): ResponseEntity<UserResponse> {
-        val userResponse = userService.getUser(userId)
-        return ResponseEntity.ok(userResponse)
+        val response = userService.getUser(userId)
+        return ResponseEntity.ok(response)
+    }
+
+    @GetMapping("/socials/{socialId}")
+    fun getSocialUser(@PathVariable socialId: Long): ResponseEntity<SocialResponse> {
+        val response = socialService.getSocialUser(socialId)
+        return ResponseEntity.ok(response)
     }
 
     @PutMapping("/users/{userId}")
@@ -66,9 +71,10 @@ class UserController(
     //소셜로그인
     @GetMapping("/login")
     fun socialLogin(@AuthenticationPrincipal oAuth2User: OAuth2User): ResponseEntity<JwtDto> {
-
-        return ResponseEntity.ok(socialService.socialLogin(oAuth2User))
+        //이거 추가됨!!!
+        return ResponseEntity.ok(socialService.login(oAuth2User))
     }
+
     @PutMapping("/password")
     fun updatePassword(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
