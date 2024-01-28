@@ -18,9 +18,10 @@ import com.teamsparta.spartabackoffice.domain.user.repository.UserRepository
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import com.teamsparta.spartabackoffice.infra.security.jwt.JwtPlugin
 import com.teamsparta.spartabackoffice.infra.social.repository.SocialRepository
+import com.teamsparta.spartabackoffice.infra.util.SecurityUtils.getAuthenticatedUser
+import com.teamsparta.spartabackoffice.infra.util.SecurityUtils.validatePlatform
 import com.teamsparta.spartabackoffice.infra.util.ValidationUtil
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -63,29 +64,22 @@ class UserServiceImpl(
     }
 
    override fun getUser(id: Long, platform: String): Any {
-        val authentication = SecurityContextHolder.getContext().authentication
-        if(authentication.principal !is UserPrincipal)
-            throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
-
-        val userPrincipal = authentication.principal as UserPrincipal
-        val email = userPrincipal.email
-
-       if (userPrincipal.platform != platform) {
-           throw IllegalArgumentException("플랫폼 정보가 일치하지 않습니다.")
+       val userPrincipal = getAuthenticatedUser()
+       validatePlatform(userPrincipal, platform)
+       val email = userPrincipal.email
+       return when(platform) {
+           "GOOGLE" -> {
+               val socialUser = socialRepository.findById(id)
+                   .orElseThrow { EmailNotFoundException(email) }
+               socialUser.toResponse()
+           }
+           "SPARTA" -> {
+               val user = userRepository.findById(id)
+                   .orElseThrow { EmailNotFoundException(email) }
+               user.toResponse()
+           }
+           else -> throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
        }
-        return when(platform) {
-            "GOOGLE" -> {
-                val socialUser = socialRepository.findById(id)
-                    .orElseThrow { EmailNotFoundException(email) }
-                socialUser.toResponse()
-            }
-            "SPARTA" -> {
-                val user = userRepository.findById(id)
-                    .orElseThrow { EmailNotFoundException(email) }
-                user.toResponse()
-            }
-            else -> throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
-        }
 //       // 이렇게 하면 requestparam으로 플랫폼 정보를 받지 않아도 됨.
 //      // 하지만 userId가 각 테이블에서 관리되어 중복될 경우 어떻게 처리해야될 지 모르겠음
 //       val tokenUserId = userPrincipal.id
@@ -130,18 +124,22 @@ class UserServiceImpl(
     }
 
 
-    override fun deleteUser(userId: Long) {
-        val authentication = SecurityContextHolder.getContext().authentication
-        val userPrincipal = authentication.principal as UserPrincipal
+    override fun deleteUser(id: Long, platform: String): Any {
+        val userPrincipal = getAuthenticatedUser()
+        validatePlatform(userPrincipal, platform)
 
-        if (userPrincipal.id != userId) {
-            throw IllegalArgumentException("요청한 사용자 ID와 토큰의 사용자 ID가 일치하지 않습니다.")
-        }
-        userRepository.findById(userId).orElseThrow {
-            IllegalArgumentException("해당 유저를 찾을 수 없습니다.")
-        }.also {
-
-            userRepository.delete(it)
+        return when(platform) {
+            "GOOGLE" -> {
+                val socialUser = socialRepository.findById(id)
+                    .orElseThrow { IllegalArgumentException("해당 유저를 찾을 수 없습니다.") }
+                socialRepository.delete(socialUser)
+            }
+            "SPARTA" -> {
+                val user = userRepository.findById(id)
+                    .orElseThrow { IllegalArgumentException("해당 유저를 찾을 수 없습니다.") }
+                userRepository.delete(user)
+            }
+            else -> throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
         }
     }
 

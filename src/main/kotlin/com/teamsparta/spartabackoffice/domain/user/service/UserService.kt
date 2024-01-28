@@ -6,6 +6,7 @@ import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdatePasswordReq
 import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdateUserRequest
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UpdateUserResponse
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
+import com.teamsparta.spartabackoffice.domain.user.model.Platform
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 
 interface UserService {
@@ -13,7 +14,7 @@ interface UserService {
     fun login(request: LoginRequest): Pair<UserResponse, String>
     fun getUser(id: Long, platform: String): Any
     fun updateUser(userId: Long, request: UpdateUserRequest) : UpdateUserResponse
-    fun deleteUser(userId: Long)
+    fun deleteUser(id: Long, platform: String): Any
 
     //fun logout(token: String): String
 

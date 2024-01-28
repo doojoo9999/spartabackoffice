@@ -1,5 +1,6 @@
 package com.teamsparta.spartabackoffice.infra.social.jwt
 
+import com.teamsparta.spartabackoffice.domain.user.model.Platform
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 import com.teamsparta.spartabackoffice.infra.security.jwt.JwtAuthenticationToken
 import jakarta.servlet.FilterChain

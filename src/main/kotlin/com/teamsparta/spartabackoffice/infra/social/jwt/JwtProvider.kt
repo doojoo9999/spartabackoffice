@@ -1,18 +1,14 @@
 package com.teamsparta.spartabackoffice.infra.social.jwt
 
-import co.touchlab.kermit.platformLogWriter
-import com.teamsparta.spartabackoffice.domain.user.model.UserRole
-import com.teamsparta.spartabackoffice.infra.social.model.SocialEntity
+import com.teamsparta.spartabackoffice.domain.user.model.Platform
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Component
 import java.nio.charset.StandardCharsets
-import java.security.Key
 import java.time.Instant
 import java.util.*
 
@@ -35,7 +31,7 @@ class JwtProvider(
 
         }
     }
-    fun generateJwtDto(oAuth2User: OAuth2User, id: String, role:String,platform: String) : JwtDto {
+    fun generateJwtDto(oAuth2User: OAuth2User, id: String, role:String,platform: Platform) : JwtDto {
         val accessTokenExpiresIn = Date(Date().time + accessTokenExpirationHour)
         val now = Instant.now()
         val expirationPeriod = java.time.Duration.ofHours(168)

@@ -4,7 +4,7 @@ import java.util.regex.Pattern
 
 object ValidationUtil {
     fun isValidUsername(username: String): Boolean {
-        val regex = "^[a-z0-9]{4,10}$"
+        val regex = "^[가-힣]{2,8}$"
         val pattern = Pattern.compile(regex)
         val matcher = pattern.matcher(username)
         return matcher.matches()

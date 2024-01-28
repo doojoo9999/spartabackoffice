@@ -6,9 +6,9 @@ import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdatePasswordReq
 import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdateUserRequest
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UpdateUserResponse
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
+import com.teamsparta.spartabackoffice.domain.user.model.Platform
 import com.teamsparta.spartabackoffice.domain.user.service.UserService
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
-import com.teamsparta.spartabackoffice.infra.social.dto.SocialResponse
 import com.teamsparta.spartabackoffice.infra.social.jwt.JwtDto
 import com.teamsparta.spartabackoffice.infra.social.service.SocialService
 import org.springframework.http.HttpHeaders
@@ -40,8 +40,10 @@ class UserController(
     }
     //소셜로그인
     @GetMapping("/login")
-    fun socialLogin(@AuthenticationPrincipal oAuth2User: OAuth2User): ResponseEntity<JwtDto> {
-        //이거 추가됨!!!
+    fun socialLogin(@AuthenticationPrincipal oAuth2User: OAuth2User?): ResponseEntity<JwtDto> {
+        if (oAuth2User == null) {
+            throw IllegalArgumentException("인증된 사용자가 없습니다.")
+        }
         return ResponseEntity.ok(socialService.socialLogin(oAuth2User))
     }
 
@@ -63,8 +65,8 @@ class UserController(
     }
 
     @DeleteMapping("/users/withdraw/{userId}")
-    fun deleteUser(@PathVariable userId: Long): ResponseEntity<Void> {
-        userService.deleteUser(userId)
+    fun deleteUser(@PathVariable userId: Long, @RequestParam platform: String): ResponseEntity<Void> {
+        userService.deleteUser(userId, platform)
         return ResponseEntity.noContent().build()
     }
 

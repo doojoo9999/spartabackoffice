@@ -5,8 +5,8 @@ import com.teamsparta.spartabackoffice.domain.user.model.UserRole
 
 data class SocialResponse(
 
-    var id: Long?,
+    var id: Long,
     var email: String,
-    var role: UserRole?,
-    var platform: Platform?
+    var role: UserRole,
+    var platform: Platform
 )
