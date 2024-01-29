@@ -36,7 +36,7 @@ class JwtAuthenticationFilter (
                     val principal = UserPrincipal(
                         id = userId,
                         email = email,
-                        roles = setOf(role),
+                        roles = setOf("ROLE_$role"),
                         platform = platform
                     )
                     val authentication = JwtAuthenticationToken (

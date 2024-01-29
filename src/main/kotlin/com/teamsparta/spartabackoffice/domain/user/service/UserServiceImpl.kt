@@ -4,10 +4,7 @@ import com.teamsparta.spartabackoffice.domain.comment.repository.CommentReposito
 import com.teamsparta.spartabackoffice.domain.exception.EmailNotFoundException
 import com.teamsparta.spartabackoffice.domain.exception.ModelNotFoundException
 import com.teamsparta.spartabackoffice.domain.post.repository.PostRepository
-import com.teamsparta.spartabackoffice.domain.user.dto.request.LoginRequest
-import com.teamsparta.spartabackoffice.domain.user.dto.request.SignUpRequest
-import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdatePasswordRequest
-import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdateUserRequest
+import com.teamsparta.spartabackoffice.domain.user.dto.request.*
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UpdateUserResponse
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
 import com.teamsparta.spartabackoffice.domain.user.model.Platform
@@ -63,23 +60,25 @@ class UserServiceImpl(
         return Pair(user.toResponse(), token)
     }
 
-   override fun getUser(id: Long, platform: String): Any {
-       val userPrincipal = getAuthenticatedUser()
-       validatePlatform(userPrincipal, platform)
-       val email = userPrincipal.email
-       return when(platform) {
-           "GOOGLE" -> {
-               val socialUser = socialRepository.findById(id)
-                   .orElseThrow { EmailNotFoundException(email) }
-               socialUser.toResponse()
-           }
-           "SPARTA" -> {
-               val user = userRepository.findById(id)
-                   .orElseThrow { EmailNotFoundException(email) }
-               user.toResponse()
-           }
-           else -> throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
-       }
+    override fun getUser(id: Long, platform: String): Any {
+        val userPrincipal = getAuthenticatedUser()
+        validatePlatform(userPrincipal, platform)
+        val email = userPrincipal.email
+        return when(platform) {
+            "GOOGLE" -> {
+                val socialUser = socialRepository.findById(id)
+                    .orElseThrow { EmailNotFoundException(email) }
+                socialUser.toResponse()
+            }
+            "SPARTA" -> {
+                val user = userRepository.findById(id)
+                    .orElseThrow { EmailNotFoundException(email) }
+                user.toResponse()
+            }
+            else -> throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
+        }
+            }
+
 
 //       // 이렇게 하면 requestparam으로 플랫폼 정보를 받지 않아도 됨.
 //      // 하지만 userId가 각 테이블에서 관리되어 중복될 경우 어떻게 처리해야될 지 모르겠음
@@ -104,7 +103,7 @@ class UserServiceImpl(
 //
 //           else -> throw IllegalStateException("플랫폼 정보가 확인되지 않았습니다.")
 //       }
-    }
+
 
 
     @Transactional
@@ -169,6 +168,20 @@ class UserServiceImpl(
         userRepository.save(user)
 
         return "비밀번호 변경 완료"
+    }
+
+    @Transactional
+    override fun changeUserRole(
+        userPrincipal: UserPrincipal,
+        userId: Long,
+        request: ChangeRoleRequest
+    ): UserResponse {
+
+        val user = userRepository.findByIdOrNull(userId) ?: throw ModelNotFoundException ("User Id", userId)
+
+        user.role = request.newRole
+
+        return userRepository.save(user).toResponse()
     }
 
 

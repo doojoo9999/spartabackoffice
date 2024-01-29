@@ -1,10 +1,8 @@
 package com.teamsparta.spartabackoffice.domain.user.controller
 
-import com.teamsparta.spartabackoffice.domain.user.dto.request.LoginRequest
-import com.teamsparta.spartabackoffice.domain.user.dto.request.SignUpRequest
-import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdatePasswordRequest
-import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdateUserRequest
+import com.teamsparta.spartabackoffice.domain.user.dto.request.*
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UpdateUserResponse
+import com.teamsparta.spartabackoffice.domain.user.dto.response.UpdateUserRoleResponse
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
 import com.teamsparta.spartabackoffice.domain.user.model.Platform
 import com.teamsparta.spartabackoffice.domain.user.service.UserService
@@ -84,5 +82,18 @@ class UserController(
             .status(HttpStatus.OK)
             .body(userService.updatePassword(userPrincipal, request))
     }
+
+    @PutMapping("/users/{userId}/role")
+    @PreAuthorize("hasRole('ADMIN')")
+    fun changeUserRole(
+        @AuthenticationPrincipal userPrincipal: UserPrincipal,
+        @PathVariable userId : Long,
+        @RequestBody request: ChangeRoleRequest
+    ) : ResponseEntity<UserResponse> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(userService.changeUserRole(userPrincipal, userId, request))
+    }
+
 
 }

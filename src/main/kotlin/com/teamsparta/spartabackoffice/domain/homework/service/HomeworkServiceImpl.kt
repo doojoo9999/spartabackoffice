@@ -34,8 +34,6 @@ class HomeworkServiceImpl(
         val BUCKET_NAME = "homework"
         val filePath = UUID.randomUUID().toString() + '.' + (file.originalFilename!!.split('.')[1])
 
-
-
         runBlocking {
             supabase.storage.from(BUCKET_NAME).upload(filePath, file.bytes, upsert = false)
         }

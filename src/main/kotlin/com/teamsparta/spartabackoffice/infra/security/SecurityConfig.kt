@@ -39,15 +39,14 @@ class SecurityConfig(
             }
             .authorizeHttpRequests {
                 it.requestMatchers (
-//                    TODO("수정 필요")
                     "/swagger-ui/**",
                     "/v3/api-docs/**",
-                    "/api/**",
+                    "/api/v1/signup",
                     "/api/v1/login"
                 ).permitAll()
                     .requestMatchers("/api/v1/**").authenticated()
                     //위 URI를 제외하고는 모두 인증과정을 거치겠음.
-//                    .anyRequest().authenticated()
+                    .anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .addFilterBefore(socialJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)

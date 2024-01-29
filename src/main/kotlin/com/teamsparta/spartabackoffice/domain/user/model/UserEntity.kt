@@ -1,5 +1,7 @@
 package com.teamsparta.spartabackoffice.domain.user.model
 
+import com.teamsparta.spartabackoffice.domain.user.dto.request.ChangeRoleRequest
+import com.teamsparta.spartabackoffice.domain.user.dto.response.UpdateUserRoleResponse
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
 import jakarta.persistence.*
 
@@ -17,7 +19,7 @@ class UserEntity(
 
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
-    val role: UserRole?,
+    var role: UserRole,
 
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
@@ -48,3 +50,4 @@ fun UserEntity.toResponse() : UserResponse {
         platform = platform
     )
 }
+

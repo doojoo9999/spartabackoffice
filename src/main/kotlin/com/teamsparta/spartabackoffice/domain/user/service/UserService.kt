@@ -1,10 +1,8 @@
 package com.teamsparta.spartabackoffice.domain.user.service
 
-import com.teamsparta.spartabackoffice.domain.user.dto.request.LoginRequest
-import com.teamsparta.spartabackoffice.domain.user.dto.request.SignUpRequest
-import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdatePasswordRequest
-import com.teamsparta.spartabackoffice.domain.user.dto.request.UpdateUserRequest
+import com.teamsparta.spartabackoffice.domain.user.dto.request.*
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UpdateUserResponse
+import com.teamsparta.spartabackoffice.domain.user.dto.response.UpdateUserRoleResponse
 import com.teamsparta.spartabackoffice.domain.user.dto.response.UserResponse
 import com.teamsparta.spartabackoffice.infra.security.UserPrincipal
 
@@ -20,4 +18,6 @@ interface UserService {
 
     fun updatePassword (userPrincipal: UserPrincipal, request : UpdatePasswordRequest ) : Any
 
+
+    fun changeUserRole (userPrincipal: UserPrincipal, userId: Long, request: ChangeRoleRequest) : UserResponse
 }
