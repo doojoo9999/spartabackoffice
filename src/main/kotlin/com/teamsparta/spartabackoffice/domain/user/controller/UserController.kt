@@ -43,7 +43,7 @@ class UserController(
     @GetMapping("/login")
     fun socialLogin(@AuthenticationPrincipal oAuth2User: OAuth2User?): ResponseEntity<JwtDto> {
         if (oAuth2User == null) {
-            throw IllegalArgumentException("인증된 사용자가 없습니다.")
+            throw IllegalArgumentException("인증된 사용자가 없습니다")
         }
         return ResponseEntity.ok(socialService.socialLogin(oAuth2User))
     }
