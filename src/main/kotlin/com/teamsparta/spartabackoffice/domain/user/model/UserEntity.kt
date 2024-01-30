@@ -12,7 +12,7 @@ class UserEntity(
     password: String,
     name: String,
 
-    @ElementCollection
+    @ElementCollection // 값타입 컬렉션 1:N 관계를 가짐 ( 엔티티의 기본 키를 PK겸 FK로 사용함 )
     @CollectionTable(name = "user_old_passwords", joinColumns = [JoinColumn(name="user_id")])
     @Column(name = "old_passwords")
     val oldPasswords: MutableList<String> = mutableListOf(),

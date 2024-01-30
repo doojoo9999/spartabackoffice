@@ -14,15 +14,15 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/post/{postId}/comment")
 @RestController
 class CommentController(
-    private val commentService : CommentService
+    private val commentService: CommentService
 ) {
     @PostMapping()
     @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('TUTOR')")
     fun createComment(
         @PathVariable postId: Long,
-        @RequestBody createCommentRequest : CreateCommentRequest,
+        @RequestBody createCommentRequest: CreateCommentRequest,
         @AuthenticationPrincipal userPrincipal: UserPrincipal
-    ) : ResponseEntity<CommentResponse> {
+    ): ResponseEntity<CommentResponse> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(commentService.createComment(postId, createCommentRequest, userPrincipal))
@@ -35,20 +35,21 @@ class CommentController(
         @PathVariable commentId: Long,
         @RequestBody updateCommentRequest: UpdateCommentRequest,
         @AuthenticationPrincipal userPrincipal: UserPrincipal
-    ) : ResponseEntity<CommentResponse> {
-        return  ResponseEntity
+    ): ResponseEntity<CommentResponse> {
+        return ResponseEntity
             .status(HttpStatus.OK)
             .body(commentService.updateComment(postId, commentId, updateCommentRequest, userPrincipal))
 
 
     }
+
     @DeleteMapping("/{commentId}")
     @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('TUTOR')")
     fun deleteComment(
         @PathVariable postId: Long,
         @PathVariable commentId: Long,
         @AuthenticationPrincipal userPrincipal: UserPrincipal
-    ) : ResponseEntity<Unit> {
+    ): ResponseEntity<Unit> {
 
         commentService.deleteComment(postId, commentId, userPrincipal)
 
@@ -56,15 +57,15 @@ class CommentController(
             .status(HttpStatus.NO_CONTENT)
             .build()
     }
-    @GetMapping( )
+
+    @GetMapping()
     @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('TUTOR')")
-    fun getCommentList() : ResponseEntity<List<CommentResponse>> {
+    fun getCommentList(): ResponseEntity<List<CommentResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(commentService.getCommentList())
 
     }
-
 
 
 }

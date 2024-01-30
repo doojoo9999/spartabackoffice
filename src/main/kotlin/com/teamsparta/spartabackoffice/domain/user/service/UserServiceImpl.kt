@@ -29,7 +29,7 @@ class UserServiceImpl(
     private val socialRepository: SocialRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtPlugin: JwtPlugin,
-    private val postRepository : PostRepository,
+    private val postRepository: PostRepository,
     private val commentRepository: CommentRepository,
 ) : UserService {
     override fun signUp(request: SignUpRequest): UserResponse {
@@ -56,7 +56,12 @@ class UserServiceImpl(
         if (!passwordEncoder.matches(request.password, user.password)) {
             throw IllegalArgumentException("이메일 또는 비밀번호가 다릅니다.")
         }
-        val token = jwtPlugin.generateAccessToken(user.id.toString(), user.email, user.role.toString(), user.platform.toString())
+        val token = jwtPlugin.generateAccessToken(
+            user.id.toString(),
+            user.email,
+            user.role.toString(),
+            user.platform.toString()
+        )
         return Pair(user.toResponse(), token)
     }
 
@@ -64,20 +69,22 @@ class UserServiceImpl(
         val userPrincipal = getAuthenticatedUser()
         validatePlatform(userPrincipal, platform)
         val email = userPrincipal.email
-        return when(platform) {
+        return when (platform) {
             "GOOGLE" -> {
                 val socialUser = socialRepository.findById(id)
                     .orElseThrow { EmailNotFoundException(email) }
                 socialUser.toResponse()
             }
+
             "SPARTA" -> {
                 val user = userRepository.findById(id)
                     .orElseThrow { EmailNotFoundException(email) }
                 user.toResponse()
             }
+
             else -> throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
         }
-            }
+    }
 
 
 //       // 이렇게 하면 requestparam으로 플랫폼 정보를 받지 않아도 됨.
@@ -105,7 +112,6 @@ class UserServiceImpl(
 //       }
 
 
-
     @Transactional
     override fun updateUser(
         userId: Long,
@@ -128,33 +134,36 @@ class UserServiceImpl(
         val userPrincipal = getAuthenticatedUser()
         validatePlatform(userPrincipal, platform)
 
-        return when(platform) {
+        return when (platform) {
             "GOOGLE" -> {
                 val socialUser = socialRepository.findById(id)
                     .orElseThrow { IllegalArgumentException("해당 유저를 찾을 수 없습니다.") }
                 socialRepository.delete(socialUser)
             }
+
             "SPARTA" -> {
                 val user = userRepository.findById(id)
                     .orElseThrow { IllegalArgumentException("해당 유저를 찾을 수 없습니다.") }
                 userRepository.delete(user)
             }
+
             else -> throw IllegalArgumentException("알 수 없는 사용자 타입입니다.")
         }
     }
 
     override fun updatePassword(userPrincipal: UserPrincipal, request: UpdatePasswordRequest): Any {
-        val user = userRepository.findByIdOrNull(userPrincipal.id) ?: throw ModelNotFoundException ("UserId", userPrincipal.id)
+        val user =
+            userRepository.findByIdOrNull(userPrincipal.id) ?: throw ModelNotFoundException("UserId", userPrincipal.id)
 
         if (!passwordEncoder.matches(request.oldPassword, user.password)) {
-            throw IllegalArgumentException ("비밀번호가 틀렸습니다.")
+            throw IllegalArgumentException("비밀번호가 틀렸습니다.")
         }
 
         if (passwordEncoder.matches(request.newPassword, request.confirmPassword)) {
             throw IllegalArgumentException("새 비밀번호와 확인 비밀번호가 다릅니다.")
         }
 
-        if (user.oldPasswords.any { passwordEncoder.matches(request.newPassword, it)}) {
+        if (user.oldPasswords.any { passwordEncoder.matches(request.newPassword, it) }) {
             throw IllegalStateException("3회 안에 사용되었던 비밀번호를 재사용할 수 없습니다.")
         }
 
@@ -177,7 +186,7 @@ class UserServiceImpl(
         request: ChangeRoleRequest
     ): UserResponse {
 
-        val user = userRepository.findByIdOrNull(userId) ?: throw ModelNotFoundException ("User Id", userId)
+        val user = userRepository.findByIdOrNull(userId) ?: throw ModelNotFoundException("User Id", userId)
 
         user.role = request.newRole
 
